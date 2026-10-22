@@ -9,14 +9,6 @@ const addUser = (req, res) => {
     res.send("User Added")
 }
 
-
-const addProperty = async (req, res) => {
-    const newProperty = await Property({ ...req.body })
-    newProperty.save()
-    res.send("Property Added")
-}
-
 module.exports = {
-    addUser,
-    addProperty
+    addUser
 }

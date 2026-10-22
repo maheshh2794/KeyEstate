@@ -3,18 +3,16 @@ import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../auth/userSlice'
 
-function Header() {
+function Nav() {
     const dispatch = useDispatch()
 
     const token = useSelector((state) => state.Ruser.token)
     return ( 
-        <header>
+        <div className="nav">
             <h1>KeyEstate</h1>
             <div>
                 {token ? (
-                    <button onClick={() => dispatch(logout())}>
-                        Logout
-                    </button>
+                    <Link to="/login" onClick={() => dispatch(logout())}>Logout</Link>
                 ) : (
                     <>
                         <Link to="/login">Login</Link>
@@ -22,8 +20,8 @@ function Header() {
                     </>
                 )}
             </div>
-        </header>
+        </div>
     )
 }
 
-export default Header
+export default Nav

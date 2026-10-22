@@ -1,16 +1,16 @@
-import React from 'react'
+
 import { Link } from 'react-router-dom'
 
 function Menu() {
-  return (
-    <div>
-        <h1>Dashboard</h1>
-        <Link to="/body">Properties</Link>
-        <Link to="/body/property">View Properties</Link>
-        <Link to="/body/profile">My Profile</Link>
+    return (
+        <div>
+            <h2>Dashboard</h2>
 
-    </div>
-  )
+            <Link to="/home/property">Properties</Link>
+            <Link to="/home/profile">My Profile</Link>
+            <Link to="/home/addproperty">Add Property</Link>
+        </div>
+    )
 }
 
 export default Menu

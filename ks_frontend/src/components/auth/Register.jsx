@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 function Register() {
 
@@ -6,9 +7,12 @@ function Register() {
     name: "",
     age: 0,
     gender: "",
+    role: "",
     email: "",
     password: ""
   })
+
+  const navigate = useNavigate()
 
   function addUser() {
     fetch("http://localhost:4000/adduser", {
@@ -17,7 +21,11 @@ function Register() {
       headers: {
         "Content-Type": "application/json"
       }
-    }).then()
+    }).then((response) => {
+      if (response.ok) {
+        navigate('/login')
+      }
+    })
   }
 
 
@@ -35,6 +43,8 @@ function Register() {
         <option value="female">Female</option>
         <option value="other">Other</option>
       </select>
+      <br />
+      Role:<input type="text" onChange={(e) => setnewUser({ ...newUser, role: e.target.value })} />
       <br />
       Email:<input type="email" onChange={(e) => setnewUser({ ...newUser, email: e.target.value })} />
       <br />

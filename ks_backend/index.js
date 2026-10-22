@@ -8,6 +8,8 @@ const { userRegister } = require("./routes/userRouter")
 const { loginRouter } = require("./routes/authRouter")
 const { addProperty } = require("./controllers/userController")
 const property = require("./models/propertyModel")
+const userModel = require("./models/userModel")
+
 
 
 dbconnect()
@@ -46,10 +48,7 @@ app.use("/", userRegister)
 app.use("/", loginRouter)
 
 
-
-
-
-app.post("/property", checkuser, addProperty)
+app.post("/property",)
 
 
 app.get("/property", checkuser, async (req, res) => {

@@ -10,9 +10,10 @@ const auth = async (req, res) => {
 
     if (user) {
         const token = jwt.sign(user.name, "secret")
+        console.log(user)
 
         // Send token as JSON
-        res.json({ token: token })
+        res.json({ token: token, gender: user.gender, role: user.role, name: user.name, email: user.email, id: user._id })
     } else {
         res.status(401).json({ msg: "Login Failed" })
     }
