@@ -48,7 +48,7 @@ app.use("/", userRegister)
 app.use("/", loginRouter)
 
 
-app.post("/property",)
+app.post("/property", )
 
 
 app.get("/property", checkuser, async (req, res) => {
