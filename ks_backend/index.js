@@ -15,8 +15,12 @@ const {
     addBooking,
     getBookings
 } = require("./controllers/bookingController");
+const { addFavorites, getFavorites } = require("./controllers/favoriteController");
 
 dbconnect();
+
+
+
 
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
@@ -56,6 +60,11 @@ app.get("/property", checkuser, async (req, res) => {
 app.post("/bookings", checkuser, addBooking);
 
 app.get("/bookings", checkuser, getBookings);
+
+
+app.post("/favorites", checkuser, addFavorites)
+
+app.get("/favorites/:id", checkuser, getFavorites)
 
 app.listen(4000, () => {
     console.log("Server run in port 4000");

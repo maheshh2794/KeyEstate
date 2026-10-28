@@ -61,6 +61,27 @@ export const registerApi = createApi({
                 }
             })
         }),
+        addFavorite: builder.mutation({
+            query: (data) => ({
+                url: "/favorites",
+                method: "POST",
+                headers: {
+                    token: window.localStorage.getItem("token"),
+                },
+                body: data,
+            }),
+        }),
+
+        getFavorites: builder.query({
+            query: (params) => ({
+                url: `/favorites/${params}`,
+                method: "GET",
+                headers: {
+                    token: window.localStorage.getItem("token"),
+                },
+            
+            }),
+        }),
     }),
 })
 
@@ -69,5 +90,8 @@ export const {
     useGetDataQuery,
     useAddPropertyMutation,
     useAddBookingMutation,
-    useGetBookingsQuery
+    useGetBookingsQuery,
+    useAddFavoriteMutation,
+    useGetFavoritesQuery,
+    useLazyGetFavoritesQuery
 } = registerApi

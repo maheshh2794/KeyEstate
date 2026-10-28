@@ -1,33 +1,23 @@
 
 import { useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { useGetDataQuery } from '../../services/registerApi'
+import { useDispatch, useSelector } from 'react-redux'
+import { useAddFavoriteMutation, useGetDataQuery, useLazyGetFavoritesQuery } from '../../services/registerApi'
 import './property.css'
 import { viewproperty } from '../auth/userSlice'
 import { useNavigate } from 'react-router-dom'
 
 function Property() {
+  const user = useSelector((state)=>state.Ruser.id)
   const dispatch = useDispatch()
   const navigate = useNavigate()
-
-  const [favorites, setFavorites] = useState(() => {
-    return JSON.parse(
-      window.localStorage.getItem('favorites') || '[]'
-    )
-  })
-
-  const toggleFavorite = (propertyId) => {
-    const updatedFavorites = favorites.includes(propertyId)
-      ? favorites.filter((id) => id !== propertyId)
-      : [...favorites, propertyId]
-
-    setFavorites(updatedFavorites)
-
-    window.localStorage.setItem(
-      'favorites',
-      JSON.stringify(updatedFavorites)
-    )
+  
+  const [addfav]= useAddFavoriteMutation()
+  
+  async function addfavhandler(a,b){
+    addfav({userid:a,propertyid:b})
   }
+
+  
 
   const {
     data: properties,
@@ -35,10 +25,6 @@ function Property() {
     isError,
     error
   } = useGetDataQuery()
-
-  console.log('Properties:', properties)
-  console.log('Loading:', isLoading)
-  console.log('Error:', error)
 
   if (isLoading) {
     return <p className="property-message">Loading property details...</p>
@@ -66,20 +52,10 @@ function Property() {
           <div key={property._id} className="property-card">
 
             {/* Favorite Button */}
-            <button
-              type="button"
-              className={`property-favorite-button ${
-                favorites.includes(property._id) ? 'is-favorite' : ''
-              }`}
-              onClick={() => toggleFavorite(property._id)}
-              aria-label={
-                favorites.includes(property._id)
-                  ? 'Remove from favorites'
-                  : 'Add to favorites'
-              }
-              aria-pressed={favorites.includes(property._id)}
-            >
-              {favorites.includes(property._id) ? '♥' : '♡'}
+            <button className='property-favorite-button' onClick={()=>{addfavhandler(user,property._id)}}>
+              {/* {favorites.includes(property._id) ? '♥' : '♡'} */}
+              ♥
+
             </button>
 
             <div className="property-image-wrapper">
