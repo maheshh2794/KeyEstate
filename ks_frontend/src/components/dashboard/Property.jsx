@@ -1,4 +1,5 @@
 
+import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useGetDataQuery } from '../../services/registerApi'
 import './property.css'
@@ -6,36 +7,151 @@ import { viewproperty } from '../auth/userSlice'
 import { useNavigate } from 'react-router-dom'
 
 function Property() {
-  const {
-    data: properties,
-    isLoading,
-  } = useGetDataQuery()
-
-  if (isLoading) {
-    return <p>Loading property details...</p>
-  }
-
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  return (
-    <div>
-      <h2>Properties</h2>
+  const [favorites, setFavorites] = useState(() => {
+    return JSON.parse(
+      window.localStorage.getItem('favorites') || '[]'
+    )
+  })
 
-      {properties.map((property) => (
-        <div key={property._id} className="property-card">
-          <img src={property.image} alt={property.title} style={{ width: '200px', height: '150px' }} />
-          <h3>{property.title}</h3>
-          <div>{property.description}</div>
-          <div>Bedrooms: {property.bedrooms}</div>
-          <div>Bathrooms: {property.bathrooms}</div>
-          <div>Amenities: {property.amenities.map((amenity) => <span key={amenity}>{amenity}, </span>)}</div>
-          <div>Price: ${property.price.toLocaleString()}</div>
-          <button onClick={()=>{dispatch(viewproperty(property)) 
-            navigate('/home/viewproperty')
-          }} >View Details</button>
-        </div>
-      ))}
+  const toggleFavorite = (propertyId) => {
+    const updatedFavorites = favorites.includes(propertyId)
+      ? favorites.filter((id) => id !== propertyId)
+      : [...favorites, propertyId]
+
+    setFavorites(updatedFavorites)
+
+    window.localStorage.setItem(
+      'favorites',
+      JSON.stringify(updatedFavorites)
+    )
+  }
+
+  const {
+    data: properties,
+    isLoading,
+    isError,
+    error
+  } = useGetDataQuery()
+
+  console.log('Properties:', properties)
+  console.log('Loading:', isLoading)
+  console.log('Error:', error)
+
+  if (isLoading) {
+    return <p className="property-message">Loading property details...</p>
+  }
+
+  if (isError) {
+    return (
+      <p className="property-message property-error">
+        Error fetching property details
+      </p>
+    )
+  }
+
+  return (
+    <div className="properties-page">
+      <div className="properties-header">
+        <h2 className="properties-title">Properties</h2>
+        <p className="properties-subtitle">
+          Explore properties and find your perfect place.
+        </p>
+      </div>
+
+      <div className="properties-grid">
+        {(properties || []).map((property) => (
+          <div key={property._id} className="property-card">
+
+            {/* Favorite Button */}
+            <button
+              type="button"
+              className={`property-favorite-button ${
+                favorites.includes(property._id) ? 'is-favorite' : ''
+              }`}
+              onClick={() => toggleFavorite(property._id)}
+              aria-label={
+                favorites.includes(property._id)
+                  ? 'Remove from favorites'
+                  : 'Add to favorites'
+              }
+              aria-pressed={favorites.includes(property._id)}
+            >
+              {favorites.includes(property._id) ? '♥' : '♡'}
+            </button>
+
+            <div className="property-image-wrapper">
+              <img
+                className="property-image"
+                src={property.images?.[0]}
+                alt={property.title}
+              />
+            </div>
+
+            <div className="property-card-content">
+              <h3 className="property-title">{property.title}</h3>
+
+              <div className="property-description">
+                {property.description}
+              </div>
+
+              <div className="property-features">
+                <div className="property-feature">
+                  <span className="property-feature-label">Bedrooms</span>
+                  <span className="property-feature-value">
+                    {property.bedrooms}
+                  </span>
+                </div>
+
+                <div className="property-feature">
+                  <span className="property-feature-label">Bathrooms</span>
+                  <span className="property-feature-value">
+                    {property.bathrooms}
+                  </span>
+                </div>
+              </div>
+
+              <div className="property-amenities">
+                <span className="property-feature-label">Amenities</span>
+
+                <div className="property-amenity-list">
+                  {property.amenities?.map((amenity) => (
+                    <span className="property-amenity" key={amenity}>
+                      {amenity}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="property-card-footer">
+                <div className="property-price">
+                  <span className="property-price-label">Price</span>
+
+                  <span className="property-price-value">
+                    ₹{property.price?.toLocaleString('en-IN')}
+                  </span>
+                </div>
+
+                <button
+                  className="property-view-button"
+                  onClick={() => {
+                    window.localStorage.setItem(
+                      'propertyid',
+                      property._id
+                    )
+                    dispatch(viewproperty(property._id))
+                    navigate('/home/viewproperty')
+                  }}
+                >
+                  View Details
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }

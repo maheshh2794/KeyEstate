@@ -102,8 +102,7 @@ const propertySchema = new mongoose.Schema(
     ],
 
     listedBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      type: String,
       required: true,
     },
 
@@ -118,9 +117,7 @@ const propertySchema = new mongoose.Schema(
       default: true,
     },
   },
-  {
-    timestamps: true,
-  }
+  
 );
 
 const Property = mongoose.model("Property", propertySchema);

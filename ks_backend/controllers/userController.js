@@ -1,6 +1,5 @@
 const express = require("express")
 const userModel = require("../models/userModel")
-const Property = require("../models/propertyModel")
 
 
 const addUser = (req, res) => {

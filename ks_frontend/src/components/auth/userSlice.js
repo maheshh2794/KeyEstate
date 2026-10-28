@@ -8,7 +8,7 @@ const initialState = {
     gender: window.localStorage.getItem("gender") || null,
     role: window.localStorage.getItem("role") || null,
     id: window.localStorage.getItem("id") || null,
-    property: null,
+    property: window.localStorage.getItem("propertyid") || null,
 }
 
 export const userSlice = createSlice({
@@ -37,6 +37,7 @@ export const userSlice = createSlice({
             window.localStorage.removeItem('gender');
             window.localStorage.removeItem('role');
             window.localStorage.removeItem('id');
+            window.localStorage.removeItem('propertyid');
         },
         viewproperty: (state, { payload }) => {
             state.property = payload

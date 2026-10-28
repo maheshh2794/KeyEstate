@@ -1,0 +1,127 @@
+
+.register-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 16px;
+  background: linear-gradient(135deg, #eef2ff, #f8fafc, #e0e7ff);
+  font-family: Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+.register-page * {
+  box-sizing: border-box;
+}
+
+.register-card {
+  width: 100%;
+  max-width: 460px;
+  padding: 36px 32px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  box-shadow: 0 15px 45px rgba(15, 23, 42, 0.10);
+}
+
+.register-header {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.register-title {
+  margin: 0 0 10px;
+  color: #111827;
+  font-size: 29px;
+  font-weight: 700;
+  letter-spacing: -0.6px;
+}
+
+.register-subtitle {
+  margin: 0;
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.register-label {
+  margin-top: 5px;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.register-input {
+  width: 100%;
+  min-height: 44px;
+  padding: 11px 13px;
+  border: 1px solid #d1d5db;
+  border-radius: 9px;
+  outline: none;
+  background: #ffffff;
+  color: #111827;
+  font-family: inherit;
+  font-size: 14px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.register-input::placeholder {
+  color: #9ca3af;
+}
+
+.register-input:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+}
+
+.register-select {
+  cursor: pointer;
+}
+
+.register-button {
+  width: 100%;
+  margin-top: 16px;
+  padding: 14px;
+  border: none;
+  border-radius: 9px;
+  background: #4f46e5;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.register-button:hover {
+  background: #4338ca;
+  transform: translateY(-1px);
+}
+
+.register-button:active {
+  transform: translateY(0);
+}
+
+.register-footer {
+  margin: 22px 0 0;
+  color: #9ca3af;
+  font-size: 12px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .register-card {
+    padding: 28px 20px;
+    border-radius: 14px;
+  }
+
+  .register-title {
+    font-size: 25px;
+  }
+}

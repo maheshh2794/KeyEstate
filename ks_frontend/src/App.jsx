@@ -5,9 +5,12 @@ import Nav from './components/nav/Nav.jsx'
 
 function App() {
   return (
-    <div>
+    <div className="app-container">
       <Nav />
-      <Outlet />
+
+      <main className="app-main-content">
+        <Outlet />
+      </main>
     </div>
   )
 }

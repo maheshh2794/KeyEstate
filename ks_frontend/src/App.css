@@ -1,0 +1,30 @@
+
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f8fafc;
+  color: #111827;
+  font-family: Arial, sans-serif;
+}
+
+.app-main-content {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* Consistent sizing */
+.app-container *,
+.app-container *::before,
+.app-container *::after {
+  box-sizing: border-box;
+}
+
+/* Responsive spacing */
+@media (max-width: 768px) {
+  .app-main-content {
+    width: 100%;
+  }
+}

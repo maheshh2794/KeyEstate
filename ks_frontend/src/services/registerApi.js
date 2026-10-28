@@ -19,6 +19,7 @@ export const registerApi = createApi({
                 }
             })
         }),
+
         getData: builder.query({
             query: () => ({
                 url: '/property',
@@ -28,8 +29,45 @@ export const registerApi = createApi({
                 },
             })
         }),
+
+        addProperty: builder.mutation({
+            query: (propertyData) => ({
+                url: '/addproperty',
+                method: 'POST',
+                body: propertyData,
+                headers: {
+                    token: window.localStorage.getItem('token') || '',
+                }
+            })
+        }),
+
+        addBooking: builder.mutation({
+            query: (bookingData) => ({
+                url: "/bookings",
+                method: "POST",
+                body: bookingData,
+                headers: {
+                    token: window.localStorage.getItem("token") || ""
+                }
+            })
+        }),
+
+        getBookings: builder.query({
+            query: () => ({
+                url: "/bookings",
+                method: "GET",
+                headers: {
+                    token: window.localStorage.getItem("token") || ""
+                }
+            })
+        }),
     }),
 })
 
-
-export const { useLoginUserMutation, useGetDataQuery } = registerApi
+export const {
+    useLoginUserMutation,
+    useGetDataQuery,
+    useAddPropertyMutation,
+    useAddBookingMutation,
+    useGetBookingsQuery
+} = registerApi

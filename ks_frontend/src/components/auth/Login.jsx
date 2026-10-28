@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux'
 import { useLoginUserMutation } from '../../services/registerApi'
 import { login } from './userSlice'
 import { useNavigate } from 'react-router-dom'
+import './login.css'
 
 function Login() {
   const [user, setUser] = useState({
@@ -37,30 +38,45 @@ function Login() {
   }
 
   return (
-    <div>
-      Email:
-      <input
-        type="email"
-        value={user.email}
-        onChange={(e) =>
-          setUser({ ...user, email: e.target.value })
-        }
-      />
+    <div className="login-page">
+      <div className="login-card">
+        <div className="login-header">
+          <h1 className="login-title">Welcome Back</h1>
+          <p className="login-subtitle">Sign in to your KeyEstate account</p>
+        </div>
 
-      <br />
+        <div className="login-form">
+          <label className="login-label">Email Address</label>
+          <input
+            className="login-input"
+            type="email"
+            placeholder="Enter your email"
+            value={user.email}
+            onChange={(e) =>
+              setUser({ ...user, email: e.target.value })
+            }
+          />
 
-      Password:
-      <input
-        type="password"
-        value={user.password}
-        onChange={(e) =>
-          setUser({ ...user, password: e.target.value })
-        }
-      />
+          <label className="login-label">Password</label>
+          <input
+            className="login-input"
+            type="password"
+            placeholder="Enter your password"
+            value={user.password}
+            onChange={(e) =>
+              setUser({ ...user, password: e.target.value })
+            }
+          />
 
-      <br />
+          <button className="login-button" onClick={handleLogin}>
+            Login
+          </button>
+        </div>
 
-      <button onClick={handleLogin}>Login</button>
+        <p className="login-footer">
+          Don't have an account? <a href="/register">Register here</a>
+        </p>
+      </div>
     </div>
   )
 }

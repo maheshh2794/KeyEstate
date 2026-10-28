@@ -17,6 +17,8 @@ import Profile from './components/dashboard/Profile.jsx'
 import Hero from './components/dashboard/Hero.jsx'
 import AddProperty from './components/dashboard/AddProperty.jsx'
 import ViewProperty from './components/dashboard/ViewProperty.jsx'
+import Booking from './components/dashboard/Booking.jsx'
+import Favorites from './components/dashboard/Favorites.jsx'
 
 const router = createBrowserRouter([
   {
@@ -36,11 +38,11 @@ const router = createBrowserRouter([
         element: <Register />,
       },
       {
-        path: '/home',
+        path: 'home',
         element: <Hero />,
         children: [
           {
-            path: '',
+            index: true,
             element: <Navigate to="/home/property" replace />,
           },
           {
@@ -56,13 +58,23 @@ const router = createBrowserRouter([
             element: <AddProperty />,
           },
           {
-            path:"viewproperty",
-            element:<ViewProperty></ViewProperty>
+            path: 'viewproperty',
+            element: <ViewProperty />,
+          },
+          {
+            path: 'bookings',
+            element: <Booking />,
+          },
+          {
+            path:"favorites",
+            element:<Favorites />
           }
         ],
       },
-    ],}
-  ])
+    ],
+  },
+])
+
 createRoot(document.getElementById('root')).render(
   <Provider store={store}>
     <RouterProvider router={router} />
