@@ -17,7 +17,7 @@ function Register() {
   const navigate = useNavigate()
 
   function addUser() {
-    fetch("http://localhost:4000/adduser", {
+    fetch(`${import.meta.env.VITE_API_URL}/adduser`, {
       method: "post",
       body: JSON.stringify(newUser),
       headers: {
