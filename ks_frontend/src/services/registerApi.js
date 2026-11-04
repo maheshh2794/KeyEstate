@@ -5,7 +5,7 @@ export const registerApi = createApi({
     reducerPath: 'registerApi',
 
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:4000'
+        baseUrl: import.meta.env.VITE_API_URL
     }),
 
     endpoints: (builder) => ({
@@ -56,7 +56,7 @@ export const registerApi = createApi({
                 url: `/deleteproperty/${id}`,
                 method: "DELETE",
                 headers: {
-                    token: localStorage.getItem("token")
+                    token: localStorage.getItem("token") || ''
                 }
             })
         }),
@@ -106,14 +106,20 @@ export const registerApi = createApi({
             query: ({ id, status }) => ({
                 url: `/updatebooking/${id}`,
                 method: "PATCH",
-                body: { status }
+                body: { status },
+                headers: {
+                    token: window.localStorage.getItem("token") || ""
+                }
             })
         }),
 
         confirmBooking: builder.mutation({
             query: (id) => ({
                 url: `/confirmbooking/${id}`,
-                method: "PATCH"
+                method: "PATCH",
+                headers: {
+                    token: window.localStorage.getItem("token") || ""
+                }
             })
         }),
 
@@ -122,7 +128,7 @@ export const registerApi = createApi({
                 url: "/favorites",
                 method: "POST",
                 headers: {
-                    token: window.localStorage.getItem("token"),
+                    token: window.localStorage.getItem("token") || "",
                 },
                 body: data,
             }),
@@ -133,9 +139,8 @@ export const registerApi = createApi({
                 url: `/favorites/${params}`,
                 method: "GET",
                 headers: {
-                    token: window.localStorage.getItem("token"),
+                    token: window.localStorage.getItem("token") || "",
                 },
-
             }),
         }),
     }),
