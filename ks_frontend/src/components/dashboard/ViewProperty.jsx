@@ -1,4 +1,3 @@
-
 import { useSelector } from "react-redux"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
@@ -6,9 +5,7 @@ import './viewproperty.css'
 
 import {
     useAddBookingMutation,
-
     useGetBookingsbyUserQuery,
-
     useGetDataQuery,
     useLazyGetBookingsbyUserQuery
 } from "../../services/registerApi"
@@ -34,7 +31,6 @@ function ViewProperty() {
     const [getBookfn] = useLazyGetBookingsbyUserQuery()
 
     const { data: userbookings } = useGetBookingsbyUserQuery(user)
-
 
     async function addfn(propertyid, sellerid) {
         await addBookfn({
@@ -83,7 +79,7 @@ function ViewProperty() {
                         className="property-image"
                         src={
                             property.images?.[0]
-                                ? `http://localhost:4000${property.images[0]}`
+                                ? `https://keyestate.onrender.com${property.images[0]}`
                                 : '/default-property.jpg'
                         }
                         alt={property.title}
@@ -201,9 +197,9 @@ function ViewProperty() {
 
                         }
                         {
-                            alreadyBooked && <div  className="view-property-booking-controls">
+                            alreadyBooked && <div className="view-property-booking-controls">
                                 <h2>You already Booked this property</h2>
-                                <button onClick={()=>{navigate('/home/property')}}>Go Back</button>
+                                <button onClick={() => { navigate('/home/property') }}>Go Back</button>
                             </div>
                         }
 
