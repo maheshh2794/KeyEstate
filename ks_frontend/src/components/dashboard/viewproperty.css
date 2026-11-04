@@ -1,0 +1,47 @@
+.view-property-card {
+  overflow: hidden; background: #fff; border: 1px solid #e7ebf2;
+  border-radius: 20px; box-shadow: 0 10px 32px rgba(30, 48, 85, .07);
+}
+.view-property-card > .property-image-wrapper { height: clamp(230px, 38vw, 440px); }
+.view-property-content { padding: clamp(22px, 4vw, 38px); }
+.view-property-title { margin: 0 0 12px; color: #172033; font: 800 clamp(23px, 3vw, 31px)/1.25 'Manrope', sans-serif; }
+.view-property-description { margin: 0 0 18px; color: #6f7b90; font-size: 14px; line-height: 1.8; }
+.view-property-price { margin-bottom: 25px; color: #2448bd; font: 800 28px/1.2 'Manrope', sans-serif; }
+.view-property-details-grid {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px;
+  padding: 20px 0; border-top: 1px solid #edf0f5; border-bottom: 1px solid #edf0f5;
+}
+.view-property-detail {
+  display: flex; flex-direction: column; gap: 7px; min-height: 66px;
+  padding: 12px; border-radius: 10px; background: #f7f8fc;
+}
+.view-property-label { color: #8993a5; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .35px; }
+.view-property-value { color: #354159; font-size: 13px; font-weight: 700; overflow-wrap: anywhere; }
+.view-property-section { margin-top: 25px; }
+.view-property-section-title { margin: 0 0 13px; color: #26334b; font: 700 17px 'Manrope', sans-serif; }
+.view-property-amenities { display: flex; flex-wrap: wrap; gap: 8px; }
+.view-property-address { color: #68758b; font-size: 14px; line-height: 1.5; }
+.view-property-address p { margin: 4px 0; }
+.view-property-booking-controls {
+  display: flex; flex-direction: column; gap: 13px; padding: 25px clamp(22px, 4vw, 38px);
+  background: #f8f9fd; border-top: 1px solid #edf0f5;
+}
+.view-property-booking-controls h3 { margin: 0; color: #26334b; font: 700 18px 'Manrope', sans-serif; }
+.view-property-booking-controls input {
+  width: 100%; min-height: 48px; padding: 12px 14px; border: 1px solid #dfe5ef;
+  border-radius: 10px; outline: none; background: #fff;
+}
+.view-property-booking-controls input:focus { border-color: #6b86e8; box-shadow: 0 0 0 4px rgba(49,87,213,.1); }
+.view-property-booking-controls button, .view-property-section button {
+  align-self: flex-start; min-height: 44px; padding: 0 20px; border: 0; border-radius: 9px;
+  color: #fff; background: #3157d5; font-weight: 700;
+}
+.view-property-booking-controls button:hover, .view-property-section button:hover { background: #2445b5; }
+.view-property-booking-controls button:disabled { opacity: .6; cursor: not-allowed; }
+.view-property-message { margin: 35px auto; color: #68758b; text-align: center; }
+@media (max-width: 850px) { .view-property-details-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 480px) {
+  .view-property-details-grid { gap: 8px; }
+  .view-property-detail { padding: 10px; }
+  .view-property-price { font-size: 24px; }
+}

@@ -1,0 +1,11 @@
+/* Favorite cards reuse the property card styling from property.css. */
+.favorites-empty {
+  max-width: 560px; margin: 35px auto; padding: 48px 28px; text-align: center;
+  background: #fff; border: 1px dashed #d7deea; border-radius: 18px;
+}
+.favorites-empty-icon {
+  width: 70px; height: 70px; display: grid; place-items: center; margin: 0 auto 18px;
+  border-radius: 50%; color: #e04468; background: #fff0f3; font-size: 39px;
+}
+.favorites-empty h2 { margin: 0 0 9px; color: #26334b; font: 700 20px 'Manrope', sans-serif; }
+.favorites-empty p { max-width: 390px; margin: 0 auto; color: #8993a5; font-size: 13px; line-height: 1.7; }

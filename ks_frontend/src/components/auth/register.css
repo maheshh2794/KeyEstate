@@ -1,0 +1,13 @@
+/* Registration page shares the authentication design in login.css. */
+.register-page { align-items: flex-start; }
+.register-card { max-width: 510px; padding: 36px 42px; }
+.register-header { margin-bottom: 24px; }
+.register-form { display: flex; flex-direction: column; }
+.register-label { margin-bottom: 7px; }
+.register-input { margin-bottom: 14px; }
+.register-select { appearance: auto; cursor: pointer; }
+.register-button { margin-top: 8px; }
+.register-footer { margin-top: 20px; }
+@media (max-width: 520px) {
+  .register-card { padding: 28px 21px; }
+}

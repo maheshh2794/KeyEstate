@@ -1,0 +1,18 @@
+.bookings-title { margin-bottom: 25px; }
+.bookings-page { display: flex; flex-direction: column; gap: 16px; }
+.booking-card {
+  width: 100%; padding: 22px 24px; background: #fff;
+  border: 1px solid #e7ebf2; border-radius: 15px;
+  box-shadow: 0 7px 22px rgba(30,48,85,.05);
+}
+.booking-card p { margin: 0 0 11px; color: #68758b; font-size: 14px; line-height: 1.55; overflow-wrap: anywhere; }
+.booking-card .booking-property { margin-bottom: 13px; color: #26334b; font: 700 17px 'Manrope', sans-serif; }
+.booking-card .booking-price { color: #2448bd; font-weight: 800; }
+.booking-card .booking-status { display: inline-flex; width: fit-content; padding: 6px 10px; border-radius: 20px; color: #9a6a12; background: #fff6df; font-size: 12px; font-weight: 700; }
+.booking-delete-button {
+  min-height: 39px; margin-top: 5px; padding: 0 15px; border: 1px solid #f0cbd1;
+  border-radius: 8px; color: #c33f55; background: #fff5f6; font-size: 12px; font-weight: 700;
+  transition: .2s ease;
+}
+.booking-delete-button:hover { color: #fff; background: #c94359; border-color: #c94359; }
+.bookings-empty { padding: 32px; border: 1px dashed #d7deea; border-radius: 13px; color: #8993a5; text-align: center; background: #fff; }

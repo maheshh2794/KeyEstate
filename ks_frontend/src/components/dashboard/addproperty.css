@@ -1,0 +1,36 @@
+.add-property-card {
+  padding: clamp(20px, 3.5vw, 36px); background: #fff;
+  border: 1px solid #e7ebf2; border-radius: 19px;
+  box-shadow: 0 10px 32px rgba(30, 48, 85, .06);
+}
+.add-property-section { padding-bottom: 26px; margin-bottom: 25px; border-bottom: 1px solid #edf0f5; }
+.add-property-section:last-of-type { border-bottom: 0; margin-bottom: 0; }
+.add-property-section-title { margin: 0 0 20px; color: #26334b; font: 700 18px 'Manrope', sans-serif; }
+.add-property-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 20px; }
+.add-property-field { min-width: 0; display: flex; flex-direction: column; }
+.add-property-full-width { grid-column: 1 / -1; }
+.add-property-label { margin-bottom: 8px; color: #46536b; font-size: 13px; font-weight: 700; }
+.add-property-input {
+  width: 100%; min-height: 47px; padding: 11px 13px; color: #26334b;
+  border: 1px solid #dfe5ef; border-radius: 9px; background: #fbfcff; outline: none;
+  transition: .2s ease;
+}
+.add-property-input::placeholder { color: #a0a9b8; }
+.add-property-input:focus { border-color: #6b86e8; background: #fff; box-shadow: 0 0 0 4px rgba(49,87,213,.1); }
+textarea.add-property-input { min-height: 110px; resize: vertical; line-height: 1.6; }
+input.add-property-input[type="file"] { padding: 10px; color: #718096; }
+.add-property-actions { display: flex; justify-content: flex-end; padding-top: 22px; }
+.add-property-button {
+  min-width: 175px; min-height: 48px; padding: 0 22px; border: 0; border-radius: 10px;
+  color: #fff; background: #3157d5; font-size: 14px; font-weight: 700;
+  box-shadow: 0 7px 17px rgba(49,87,213,.18); transition: .2s ease;
+}
+.add-property-button:hover { background: #2445b5; transform: translateY(-1px); }
+.add-property-button:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+.add-property-card > p { margin: 16px 0 0; color: #21845a; font-size: 13px; font-weight: 600; }
+@media (max-width: 650px) {
+  .add-property-grid { grid-template-columns: 1fr; gap: 15px; }
+  .add-property-full-width { grid-column: auto; }
+  .add-property-actions { justify-content: stretch; }
+  .add-property-button { width: 100%; }
+}
