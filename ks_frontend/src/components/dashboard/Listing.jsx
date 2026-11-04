@@ -47,7 +47,7 @@ function Listing() {
                     className="listing-image"
                     src={
                       property.images?.[0]
-                        ? `http://localhost:4000${property.images[0]}`
+                        ? `https://keyestate.onrender.com${property.images[0]}`
                         : '/default-property.jpg'
                     }
                     alt={property.title}
