@@ -31,16 +31,30 @@ const upload = require("./middleware/upload");
 
 dbconnect();
 
-// Middleware
-app.use(cors({
-    origin: [
-        "http://localhost:5173",
-        process.env.FRONTEND_URL
-    ].filter(Boolean),
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-    allowedHeaders: ["Content-Type", "token"]
-}));
+// CORS Configuration
+const allowedOrigins = [
+    "http://localhost:5173",
+    "https://key-estate-six.vercel.app",
+    process.env.FRONTEND_URL
+].filter(Boolean);
 
+const corsOptions = {
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "token", "Authorization"],
+    optionsSuccessStatus: 204
+};
+
+// Apply CORS before all routes
+app.use(cors(corsOptions));
+
+// Body parsers
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
