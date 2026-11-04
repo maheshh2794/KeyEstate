@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   useAddFavoriteMutation,
@@ -274,7 +274,7 @@ function Property() {
                   className="property-image"
                   src={
                     property.images?.[0]
-                      ? `http://localhost:4000${property.images[0]}`
+                      ? `https://keyestate.onrender.com${property.images[0]}`
                       : '/default-property.jpg'
                   }
                   alt={property.title}
