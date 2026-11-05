@@ -8,30 +8,37 @@ const addProperty = async (req, res) => {
 
         let imageUrls = [];
 
-        // Upload image to Cloudinary
-        if (req.file) {
+        // Upload multiple images to Cloudinary
+        if (req.files && req.files.length > 0) {
 
-            const result = await new Promise((resolve, reject) => {
+            imageUrls = await Promise.all(
 
-                cloudinary.uploader.upload_stream(
-                    {
-                        folder: "keyestate/properties",
-                        resource_type: "image"
-                    },
-                    (error, result) => {
+                req.files.map((file) => {
 
-                        if (error) {
-                            reject(error);
-                        } else {
-                            resolve(result);
-                        }
+                    return new Promise((resolve, reject) => {
 
-                    }
-                ).end(req.file.buffer);
+                        cloudinary.uploader.upload_stream(
+                            {
+                                folder: "keyestate/properties",
+                                resource_type: "image"
+                            },
+                            (error, result) => {
 
-            });
+                                if (error) {
+                                    reject(error);
+                                } else {
+                                    resolve(result.secure_url);
+                                }
 
-            imageUrls.push(result.secure_url);
+                            }
+                        ).end(file.buffer);
+
+                    });
+
+                })
+
+            );
+
         }
 
         const newProperty = new Property({
