@@ -31,3 +31,66 @@ const auth = async (req, res) => {
 };
 
 exports.authentication = auth;
+
+
+// Update Profile
+const updateProfile = async (req, res) => {
+    try {
+        const { name, email, age, gender, number } = req.body;
+
+        const userId = req.user.id;
+
+        if (!name || !email || !gender || !number || age === undefined) {
+            return res.status(400).json({
+                msg: "Please provide all profile details"
+            });
+        }
+
+        const existingUser = await userModel.findOne({
+            email,
+            _id: { $ne: userId }
+        });
+
+        if (existingUser) {
+            return res.status(400).json({
+                msg: "Email already exists"
+            });
+        }
+
+        const updatedUser = await userModel.findByIdAndUpdate(
+            userId,
+            {
+                name,
+                email,
+                age,
+                gender,
+                number
+            },
+            {
+                new: true,
+                runValidators: true
+            }
+        ).select("-password");
+
+        if (!updatedUser) {
+            return res.status(404).json({
+                msg: "User not found"
+            });
+        }
+
+        res.status(200).json({
+            msg: "Profile updated successfully",
+            user: updatedUser
+        });
+
+    } catch (error) {
+        console.log("Profile Update Error:", error);
+
+        res.status(500).json({
+            msg: "Profile update failed",
+            error: error.message
+        });
+    }
+};
+
+exports.updateProfile = updateProfile;
