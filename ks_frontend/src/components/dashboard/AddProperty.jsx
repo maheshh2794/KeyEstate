@@ -22,16 +22,36 @@ function AddProperty() {
     area: '',
     areaUnit: 'sqft',
     furnishing: 'Unfurnished',
-    images: null,
+    images: [],
     amenities: ''
   })
 
   const handleChange = (e) => {
     const { name, value, files } = e.target
 
+    if (name === 'images') {
+      const selectedFiles = Array.from(files || [])
+
+      if (selectedFiles.length > 10) {
+        alert('You can select a maximum of 10 images.')
+        e.target.value = ''
+        setFormData({
+          ...formData,
+          images: []
+        })
+        return
+      }
+
+      setFormData({
+        ...formData,
+        images: selectedFiles
+      })
+      return
+    }
+
     setFormData({
       ...formData,
-      [name]: name === 'images' ? files[0] : value
+      [name]: value
     })
   }
 
@@ -58,9 +78,9 @@ function AddProperty() {
     propertyData.append('areaUnit', formData.areaUnit)
     propertyData.append('furnishing', formData.furnishing)
 
-    if (formData.images) {
-      propertyData.append('images', formData.images)
-    }
+    formData.images.forEach((image) => {
+      propertyData.append('images', image)
+    })
 
     propertyData.append(
       'amenities',
@@ -304,15 +324,22 @@ function AddProperty() {
             </div>
 
             <div className="add-property-field">
-              <label className="add-property-label">Property Image</label>
+              <label className="add-property-label">
+                Property Images (Maximum 10)
+              </label>
               <input
                 className="add-property-input"
                 type="file"
                 name="images"
                 accept="image/*"
+                multiple
                 onChange={handleChange}
                 required
               />
+
+              <p>
+                {formData.images.length} of 10 images selected
+              </p>
             </div>
 
             <div className="add-property-field add-property-full-width">
