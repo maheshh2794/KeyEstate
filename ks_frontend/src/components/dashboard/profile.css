@@ -486,6 +486,52 @@
         width: 100%;
     }
 
+
+   /* Center Profile Page Heading */
+
+.profile-header {
+    width: 100%;
+    max-width: 850px;
+    margin: 0 auto 28px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.profile-header > div {
+    width: 100%;
+    text-align: center;
+}
+
+.profile-eyebrow {
+    display: block;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.profile-page-title {
+    text-align: center;
+    font-size: 32px;
+    margin: 0;
+}
+
+.profile-page-subtitle {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+@media (max-width: 650px) {
+    .profile-header {
+        margin-bottom: 23px;
+    }
+
+    .profile-page-title {
+        font-size: 27px;
+    }
+}
+
     .profile-message {
         font-size: 12px;
     }
