@@ -40,7 +40,6 @@ const upload = require("./middleware/upload");
 
 dbconnect();
 
-// CORS Configuration
 const allowedOrigins = [
     "http://localhost:5173",
     "https://key-estate-six.vercel.app",
@@ -60,17 +59,14 @@ const corsOptions = {
     optionsSuccessStatus: 204
 };
 
-// Apply CORS
 app.use(cors(corsOptions));
 
-// Body Parsers
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-// Static Uploads
 app.use("/uploads", express.static("uploads"));
 
-// Authentication Middleware
+// Authentication middleware
 function checkuser(req, res, next) {
     const token = req.headers.token;
 
@@ -80,49 +76,43 @@ function checkuser(req, res, next) {
         });
     }
 
-    jwt.verify(
-        token,
-        process.env.JWT_SECRET,
-        (error, decoded) => {
-            if (error) {
-                return res.status(401).json({
-                    msg: "Invalid or expired token"
-                });
-            }
-
-            req.user = decoded;
-            next();
+    jwt.verify(token, process.env.JWT_SECRET, (error, decoded) => {
+        if (error) {
+            return res.status(401).json({
+                msg: "Invalid or expired token"
+            });
         }
-    );
+
+        req.user = decoded;
+        next();
+    });
 }
 
-// User Routes
+// User and login routes
 app.use("/", userRegister);
 app.use("/", loginRouter);
 
-// Get Users Details
+// Get user details
 app.get("/login", async (req, res) => {
     try {
-        const data = await userModel.find()
-            .select("-password");
+        const data = await userModel.find().select("-password");
 
         res.send({
             msg: "Users Details",
             users: data
         });
-
     } catch (error) {
         res.status(500).json({
-            msg: "Unable to get users",
+            msg: "Unable to fetch users",
             error: error.message
         });
     }
 });
 
-// Update Logged-in User Profile
+// Update profile route
 app.put("/updateprofile", checkuser, updateProfile);
 
-// Property Routes
+// Property routes
 app.post(
     "/addproperty",
     checkuser,
@@ -132,20 +122,12 @@ app.post(
 
 app.get("/property", checkuser, getProperties);
 
-app.delete(
-    "/deleteproperty/:id",
-    checkuser,
-    deleteProperty
-);
+app.delete("/deleteproperty/:id", checkuser, deleteProperty);
 
-// Booking Routes
+// Booking routes
 app.post("/bookings", checkuser, addBooking);
 
-app.get(
-    "/bookings/:userid",
-    checkuser,
-    getBookingsbyUser
-);
+app.get("/bookings/:userid", checkuser, getBookingsbyUser);
 
 app.get(
     "/bookings/requests/:sellerid",
@@ -153,23 +135,19 @@ app.get(
     getBookingsbySeller
 );
 
-app.delete(
-    "/bookings/:id",
-    checkuser,
-    deleteBookings
-);
+app.delete("/bookings/:id", checkuser, deleteBookings);
 
 app.patch("/updatebooking/:id", updateBookingStatus);
 
 app.patch("/confirmbooking/:id", confirmBooking);
 
-// Favorite Routes
+// Favorites routes
 app.post("/favorites", checkuser, addFavorites);
 
 app.get("/favorites/:id", checkuser, getFavorites);
 
-// Start Server
-const PORT = process.env.PORT || 4000;
+// Start server
+const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
