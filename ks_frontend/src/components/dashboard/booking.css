@@ -16,3 +16,17 @@
 }
 .booking-delete-button:hover { color: #fff; background: #c94359; border-color: #c94359; }
 .bookings-empty { padding: 32px; border: 1px dashed #d7deea; border-radius: 13px; color: #8993a5; text-align: center; background: #fff; }
+.booking-image-wrapper {
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+    border-radius: 12px;
+    margin-bottom: 15px;
+}
+
+.booking-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
