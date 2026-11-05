@@ -1,16 +1,23 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useUpdateProfileMutation } from "../../services/registerApi";
+import { updateUser } from "../auth/userSlice";
 import "./profile.css";
 
 function Profile() {
+    const dispatch = useDispatch();
+
+    // Get the logged-in user's details from Redux
+    const reduxUser = useSelector((state) => state.Ruser);
+
     const [user, setUser] = useState({
-        name: localStorage.getItem("name") || "",
-        email: localStorage.getItem("email") || "",
-        age: localStorage.getItem("age") || "",
-        gender: localStorage.getItem("gender") || "",
-        number: localStorage.getItem("number") || "",
-        role: localStorage.getItem("role") || ""
+        name: reduxUser.name || "",
+        email: reduxUser.email || "",
+        age: reduxUser.age ?? "",
+        gender: reduxUser.gender || "",
+        number: reduxUser.number || "",
+        role: reduxUser.role || ""
     });
 
     const [formData, setFormData] = useState(user);
@@ -20,6 +27,31 @@ function Profile() {
 
     const [updateProfile, { isLoading }] =
         useUpdateProfileMutation();
+
+    // Keep profile details synchronized when the logged-in user changes
+    useEffect(() => {
+        const currentUser = {
+            name: reduxUser.name || "",
+            email: reduxUser.email || "",
+            age: reduxUser.age ?? "",
+            gender: reduxUser.gender || "",
+            number: reduxUser.number || "",
+            role: reduxUser.role || ""
+        };
+
+        setUser(currentUser);
+        setFormData(currentUser);
+        setIsEditing(false);
+        setMessage("");
+    }, [
+        reduxUser.id,
+        reduxUser.name,
+        reduxUser.email,
+        reduxUser.age,
+        reduxUser.gender,
+        reduxUser.number,
+        reduxUser.role
+    ]);
 
     function handleChange(e) {
         const { name, value } = e.target;
@@ -33,6 +65,7 @@ function Profile() {
     function handleEdit() {
         setFormData(user);
         setMessage("");
+        setIsError(false);
         setIsEditing(true);
     }
 
@@ -58,22 +91,20 @@ function Profile() {
             }).unwrap();
 
             const updatedUser = {
-                ...user,
-                name: response.user.name,
-                email: response.user.email,
-                age: response.user.age,
-                gender: response.user.gender,
-                number: response.user.number
+                name: response.user.name || "",
+                email: response.user.email || "",
+                age: response.user.age ?? "",
+                gender: response.user.gender || "",
+                number: response.user.number || "",
+                role: reduxUser.role || ""
             };
 
+            // Update local component state
             setUser(updatedUser);
             setFormData(updatedUser);
 
-            localStorage.setItem("name", updatedUser.name);
-            localStorage.setItem("email", updatedUser.email);
-            localStorage.setItem("age", updatedUser.age);
-            localStorage.setItem("gender", updatedUser.gender);
-            localStorage.setItem("number", updatedUser.number);
+            // Update Redux and localStorage
+            dispatch(updateUser(updatedUser));
 
             setIsEditing(false);
             setMessage("Your profile has been updated successfully!");
@@ -81,7 +112,8 @@ function Profile() {
         } catch (error) {
             setIsError(true);
             setMessage(
-                error?.data?.msg || "Profile update failed. Please try again."
+                error?.data?.msg ||
+                "Profile update failed. Please try again."
             );
         }
     }
