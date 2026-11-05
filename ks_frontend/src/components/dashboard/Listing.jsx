@@ -15,13 +15,15 @@ function Requests() {
 
     // Get seller bookings
     const {
-        data: sellerbookings = [],
+        data: sellerData = [],
         refetch
     } = useGetBookingsbySellerQuery(user);
 
     // Get all properties
     const {
-        data: properties = []
+        data: propertyData = [],
+        isLoading: propertiesLoading,
+        error: propertiesError
     } = useGetDataQuery();
 
     // Get user details
@@ -29,10 +31,27 @@ function Requests() {
         data: details = {}
     } = useGetDetailsQuery();
 
-    const users = details.users || [];
+    // Handle API response formats
+    const sellerbookings = Array.isArray(sellerData)
+        ? sellerData
+        : sellerData?.bookings || [];
+
+    const properties = Array.isArray(propertyData)
+        ? propertyData
+        : propertyData?.properties ||
+          propertyData?.data ||
+          [];
+
+    const users = details?.users || [];
 
     const [updateStatus] = useUpdateBookingStatusMutation();
     const [confirmBooking] = useConfirmBookingMutation();
+
+    // Debug API data
+    console.log("Property API response:", propertyData);
+    console.log("Properties array:", properties);
+    console.log("Seller bookings:", sellerbookings);
+    console.log("User details:", users);
 
     // Reject booking
     async function rejectBooking(id) {
@@ -55,6 +74,14 @@ function Requests() {
 
             <h2>Booking Requests</h2>
 
+            {propertiesLoading && (
+                <p>Loading property details...</p>
+            )}
+
+            {propertiesError && (
+                <p>Unable to load property details.</p>
+            )}
+
             {sellerbookings.length === 0 ? (
                 <p className="no-requests">
                     No booking requests found.
@@ -67,21 +94,28 @@ function Requests() {
 
                         // Get property ID from booking
                         const propertyId =
-                            booking.property?._id || booking.property;
+                            booking.property?._id ||
+                            booking.property;
 
-                        // Find matching property
+                        // Match property using ID
                         const property = properties.find(
-                            (item) => item._id === propertyId
+                            (item) =>
+                                String(item._id) === String(propertyId)
                         );
 
                         // Get buyer ID
                         const buyerId =
-                            booking.user?._id || booking.user;
+                            booking.user?._id ||
+                            booking.user;
 
                         // Find buyer details
                         const buyer = users.find(
-                            (item) => item._id === buyerId
+                            (item) =>
+                                String(item._id) === String(buyerId)
                         );
+
+                        console.log("Booking property ID:", propertyId);
+                        console.log("Matched property:", property);
 
                         return (
                             <div
@@ -91,6 +125,7 @@ function Requests() {
 
                                 {/* Property Image */}
                                 <div className="request-image-wrapper">
+
                                     <img
                                         className="request-image"
                                         src={
@@ -99,13 +134,15 @@ function Requests() {
                                         }
                                         alt={property?.title || "Property"}
                                     />
+
                                 </div>
 
                                 {/* Request Details */}
                                 <div className="request-details">
 
                                     <h3>
-                                        {property?.title || "Property details unavailable"}
+                                        {property?.title ||
+                                            "Property details unavailable"}
                                     </h3>
 
                                     <p>
@@ -115,7 +152,7 @@ function Requests() {
 
                                     <p>
                                         <strong>Price:</strong>{" "}
-                                        {property?.price
+                                        {property?.price != null
                                             ? `₹${property.price}`
                                             : "Not available"}
                                     </p>
@@ -137,7 +174,9 @@ function Requests() {
                                     <p>
                                         <strong>Visit Date:</strong>{" "}
                                         {booking.visitDate
-                                            ? new Date(booking.visitDate).toLocaleDateString()
+                                            ? new Date(
+                                                booking.visitDate
+                                            ).toLocaleDateString()
                                             : "Not available"}
                                     </p>
 
@@ -153,19 +192,26 @@ function Requests() {
 
                                     <p>
                                         <strong>Status:</strong>{" "}
-                                        <span className={`request-status ${booking.status?.toLowerCase()}`}>
+                                        <span
+                                            className={`request-status ${
+                                                booking.status?.toLowerCase()
+                                            }`}
+                                        >
                                             {booking.status}
                                         </span>
                                     </p>
 
                                     {/* Action Buttons */}
                                     {booking.status === "Pending" && (
+
                                         <div className="request-actions">
 
                                             <button
                                                 className="confirm-btn"
                                                 onClick={() =>
-                                                    confirmBookingfn(booking._id)
+                                                    confirmBookingfn(
+                                                        booking._id
+                                                    )
                                                 }
                                             >
                                                 Confirm
@@ -174,13 +220,16 @@ function Requests() {
                                             <button
                                                 className="reject-btn"
                                                 onClick={() =>
-                                                    rejectBooking(booking._id)
+                                                    rejectBooking(
+                                                        booking._id
+                                                    )
                                                 }
                                             >
                                                 Reject
                                             </button>
 
                                         </div>
+
                                     )}
 
                                 </div>
