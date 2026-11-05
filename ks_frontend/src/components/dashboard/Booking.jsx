@@ -17,12 +17,12 @@ function Booking() {
     const { data: properties, isLoading: propertiesLoading } =
         useGetDataQuery();
 
-    const [deletefn] = useDeleteBookingsMutation()
-    const [updatefn] = useLazyGetBookingsbyUserQuery()
+    const [deletefn] = useDeleteBookingsMutation();
+    const [updatefn] = useLazyGetBookingsbyUserQuery();
 
     async function deleteBookingfn(id) {
-        await deletefn(id)
-        updatefn(user)
+        await deletefn(id);
+        updatefn(user);
     }
 
     if (bookingsLoading || propertiesLoading) {
@@ -55,7 +55,20 @@ function Booking() {
             )}
 
             {bookedProperties.map((booking) => (
-                <div div key = { booking._id } className = "booking-card" >
+                <div key={booking._id} className="booking-card">
+
+                    <div className="booking-image-wrapper">
+                        <img
+                            className="booking-image"
+                            src={
+                                booking.propertyDetails?.images?.[0]
+                                    ? booking.propertyDetails.images[0]
+                                    : '/default-property.jpg'
+                            }
+                            alt={booking.propertyDetails?.title || "Property"}
+                        />
+                    </div>
+
                     <p className="booking-property">
                         Property: {booking.propertyDetails?.title || "Property not found"}
                     </p>
@@ -68,7 +81,6 @@ function Booking() {
                         Price: ₹{booking.propertyDetails?.price?.toLocaleString("en-IN")}
                     </p>
 
-
                     <p className="booking-status">
                         Status: {booking.status}
                     </p>
@@ -79,9 +91,10 @@ function Booking() {
                     >
                         Remove Booking
                     </button>
+
                 </div>
-))}
-        </div >
+            ))}
+        </div>
     );
 }
 
