@@ -1,4 +1,3 @@
-
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 export const registerApi = createApi({
@@ -9,6 +8,7 @@ export const registerApi = createApi({
     }),
 
     endpoints: (builder) => ({
+
         loginUser: builder.mutation({
             query: (credentials) => ({
                 url: '/login',
@@ -143,6 +143,7 @@ export const registerApi = createApi({
                 },
             }),
         }),
+
     }),
 })
 
@@ -158,10 +159,10 @@ export const {
     useDeleteBookingsMutation,
     useLazyGetBookingsbyUserQuery,
     useGetBookingsbySellerQuery,
+    useLazyGetBookingsbySellerQuery,
     useGetDetailsQuery,
     useUpdateBookingStatusMutation,
     useConfirmBookingMutation,
     useDeletePropertyMutation,
     useLazyGetDataQuery
-
 } = registerApi
