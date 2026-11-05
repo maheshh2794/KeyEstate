@@ -128,10 +128,6 @@ function Requests() {
                                             "Property details unavailable"}
                                     </h3>
 
-                                    <p>
-                                        <strong>Description:</strong>{" "}
-                                        {property?.description || "Not available"}
-                                    </p>
 
                                     <p>
                                         <strong>Price:</strong>{" "}
