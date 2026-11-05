@@ -15,25 +15,48 @@ function Register() {
     password: ""
   })
 
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState("")
+
   const navigate = useNavigate()
 
-  function addUser() {
-    fetch(`${import.meta.env.VITE_API_URL}/adduser`, {
-      method: "post",
-      body: JSON.stringify(newUser),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    }).then((response) => {
+  async function addUser(e) {
+    e.preventDefault()
+
+    if (isLoading) return
+
+    setIsLoading(true)
+    setError("")
+
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/adduser`, {
+        method: "POST",
+        body: JSON.stringify(newUser),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+
+      const data = await response.json()
+
       if (response.ok) {
         navigate('/login')
+      } else {
+        setError(data.msg || "Registration failed. Please try again.")
       }
-    })
+
+    } catch (error) {
+      console.error("Registration error:", error)
+      setError("Unable to connect to server. Please try again.")
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
     <div className="register-page">
       <div className="register-card">
+
         <div className="register-header">
           <h1 className="register-title">Create Account</h1>
           <p className="register-subtitle">
@@ -41,7 +64,7 @@ function Register() {
           </p>
         </div>
 
-        <div className="register-form">
+        <form className="register-form" onSubmit={addUser}>
 
           <label className="register-label" htmlFor="name">Full Name</label>
           <input
@@ -49,7 +72,9 @@ function Register() {
             id="name"
             type="text"
             placeholder="Enter your full name"
+            value={newUser.name}
             onChange={(e) => setnewUser({ ...newUser, name: e.target.value })}
+            required
           />
 
           <label className="register-label" htmlFor="age">Age</label>
@@ -60,7 +85,9 @@ function Register() {
             min="1"
             max="120"
             placeholder="Enter your age"
+            value={newUser.age || ""}
             onChange={(e) => setnewUser({ ...newUser, age: e.target.value })}
+            required
           />
 
           <label className="register-label" htmlFor="gender">Gender</label>
@@ -68,9 +95,9 @@ function Register() {
             className="register-input register-select"
             name="gender"
             id="gender"
-            required
-            defaultValue=""
+            value={newUser.gender}
             onChange={(e) => setnewUser({ ...newUser, gender: e.target.value })}
+            required
           >
             <option value="" disabled>Select Gender</option>
             <option value="male">Male</option>
@@ -83,9 +110,9 @@ function Register() {
             className="register-input register-select"
             name="role"
             id="role"
-            required
-            defaultValue=""
+            value={newUser.role}
             onChange={(e) => setnewUser({ ...newUser, role: e.target.value })}
+            required
           >
             <option value="" disabled>Select Role</option>
             <option value="buyer">Buyer</option>
@@ -98,10 +125,11 @@ function Register() {
             id="email"
             type="email"
             placeholder="Enter your email"
+            value={newUser.email}
             onChange={(e) => setnewUser({ ...newUser, email: e.target.value })}
+            required
           />
 
-          {/* Mobile Number */}
           <label className="register-label" htmlFor="number">Mobile Number</label>
           <input
             className="register-input"
@@ -109,7 +137,10 @@ function Register() {
             type="tel"
             placeholder="Enter your mobile number"
             maxLength="10"
+            pattern="[0-9]{10}"
+            value={newUser.number}
             onChange={(e) => setnewUser({ ...newUser, number: e.target.value })}
+            required
           />
 
           <label className="register-label" htmlFor="password">Password</label>
@@ -118,18 +149,31 @@ function Register() {
             id="password"
             type="password"
             placeholder="Create a password"
+            value={newUser.password}
             onChange={(e) => setnewUser({ ...newUser, password: e.target.value })}
+            required
           />
 
-          <button className="register-button" onClick={addUser}>
-            Register
+          {error && (
+            <p className="register-error">
+              {error}
+            </p>
+          )}
+
+          <button
+            className="register-button"
+            type="submit"
+            disabled={isLoading}
+          >
+            {isLoading ? "Registering..." : "Register"}
           </button>
 
-        </div>
+        </form>
 
         <p className="register-footer">
           Already part of KeyEstate? Create your account to get started.
         </p>
+
       </div>
     </div>
   )
