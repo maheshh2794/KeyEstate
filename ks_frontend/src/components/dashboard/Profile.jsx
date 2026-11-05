@@ -4,7 +4,6 @@ import { useUpdateProfileMutation } from "../../services/registerApi";
 import "./profile.css";
 
 function Profile() {
-
     const [user, setUser] = useState({
         name: localStorage.getItem("name") || "",
         email: localStorage.getItem("email") || "",
@@ -22,7 +21,6 @@ function Profile() {
     const [updateProfile, { isLoading }] =
         useUpdateProfileMutation();
 
-    // Handle input changes
     function handleChange(e) {
         const { name, value } = e.target;
 
@@ -32,21 +30,18 @@ function Profile() {
         }));
     }
 
-    // Open edit mode
     function handleEdit() {
         setFormData(user);
         setMessage("");
         setIsEditing(true);
     }
 
-    // Cancel editing
     function handleCancel() {
         setFormData(user);
         setIsEditing(false);
         setMessage("");
     }
 
-    // Save updated profile
     async function handleSave(e) {
         e.preventDefault();
 
@@ -74,7 +69,6 @@ function Profile() {
             setUser(updatedUser);
             setFormData(updatedUser);
 
-            // Update localStorage
             localStorage.setItem("name", updatedUser.name);
             localStorage.setItem("email", updatedUser.email);
             localStorage.setItem("age", updatedUser.age);
@@ -82,7 +76,7 @@ function Profile() {
             localStorage.setItem("number", updatedUser.number);
 
             setIsEditing(false);
-            setMessage("Profile updated successfully!");
+            setMessage("Your profile has been updated successfully!");
 
         } catch (error) {
             setIsError(true);
@@ -95,43 +89,77 @@ function Profile() {
     return (
         <div className="profile-page">
 
+            {/* Page Heading */}
             <div className="profile-header">
-                <h2 className="profile-page-title">
-                    My Profile
-                </h2>
+                <div>
+                    <span className="profile-eyebrow">
+                        ACCOUNT SETTINGS
+                    </span>
 
-                <p className="profile-page-subtitle">
-                    Manage and view your account information.
-                </p>
+                    <h2 className="profile-page-title">
+                        My Profile
+                    </h2>
+
+                    <p className="profile-page-subtitle">
+                        Manage your personal information and account details.
+                    </p>
+                </div>
             </div>
 
+            {/* Profile Card */}
             <div className="profile-card">
 
-                {/* Profile Avatar */}
-                <div className="profile-avatar">
-                    {user.name
-                        ? user.name.charAt(0).toUpperCase()
-                        : "U"}
-                </div>
+                {/* Profile Identity */}
+                <div className="profile-top">
 
-                {/* Profile Header Details */}
-                <div className="profile-user-info">
+                    <div className="profile-avatar">
+                        {user.name
+                            ? user.name.charAt(0).toUpperCase()
+                            : "U"}
+                    </div>
 
-                    <h3 className="profile-name">
-                        {user.name}
-                    </h3>
+                    <div className="profile-user-info">
 
-                    <p className="profile-email">
-                        {user.email}
-                    </p>
+                        <h3 className="profile-name">
+                            {user.name || "User"}
+                        </h3>
 
-                    <span className="profile-role">
-                        {user.role}
-                    </span>
+                        <p className="profile-email">
+                            {user.email || "No email provided"}
+                        </p>
+
+                        <span className="profile-role">
+                            <span className="profile-role-dot"></span>
+                            {user.role || "User"}
+                        </span>
+
+                    </div>
 
                 </div>
 
                 <div className="profile-divider"></div>
+
+                {/* Section Heading */}
+                <div className="profile-section-heading">
+                    <div>
+                        <h3>Personal Information</h3>
+                        <p>
+                            {isEditing
+                                ? "Update your details below."
+                                : "Your registered account information."}
+                        </p>
+                    </div>
+
+                    {!isEditing && (
+                        <button
+                            type="button"
+                            className="profile-edit-btn"
+                            onClick={handleEdit}
+                        >
+                            <span>✎</span> Edit Profile
+                        </button>
+                    )}
+                </div>
 
                 {/* Profile Form */}
                 <form
@@ -141,10 +169,9 @@ function Profile() {
 
                     {/* Full Name */}
                     <div className="profile-detail-item">
-
-                        <span className="profile-detail-label">
+                        <label className="profile-detail-label">
                             Full Name
-                        </span>
+                        </label>
 
                         {isEditing ? (
                             <input
@@ -153,6 +180,7 @@ function Profile() {
                                 value={formData.name}
                                 onChange={handleChange}
                                 className="profile-input"
+                                placeholder="Enter your full name"
                                 required
                             />
                         ) : (
@@ -160,15 +188,13 @@ function Profile() {
                                 {user.name || "Not provided"}
                             </span>
                         )}
-
                     </div>
 
                     {/* Email */}
                     <div className="profile-detail-item">
-
-                        <span className="profile-detail-label">
+                        <label className="profile-detail-label">
                             Email Address
-                        </span>
+                        </label>
 
                         {isEditing ? (
                             <input
@@ -177,6 +203,7 @@ function Profile() {
                                 value={formData.email}
                                 onChange={handleChange}
                                 className="profile-input"
+                                placeholder="Enter your email"
                                 required
                             />
                         ) : (
@@ -184,15 +211,13 @@ function Profile() {
                                 {user.email || "Not provided"}
                             </span>
                         )}
-
                     </div>
 
                     {/* Age */}
                     <div className="profile-detail-item">
-
-                        <span className="profile-detail-label">
+                        <label className="profile-detail-label">
                             Age
-                        </span>
+                        </label>
 
                         {isEditing ? (
                             <input
@@ -203,6 +228,7 @@ function Profile() {
                                 value={formData.age}
                                 onChange={handleChange}
                                 className="profile-input"
+                                placeholder="Enter your age"
                                 required
                             />
                         ) : (
@@ -210,15 +236,13 @@ function Profile() {
                                 {user.age || "Not provided"}
                             </span>
                         )}
-
                     </div>
 
                     {/* Gender */}
                     <div className="profile-detail-item">
-
-                        <span className="profile-detail-label">
+                        <label className="profile-detail-label">
                             Gender
-                        </span>
+                        </label>
 
                         {isEditing ? (
                             <select
@@ -228,36 +252,23 @@ function Profile() {
                                 className="profile-input"
                                 required
                             >
-                                <option value="">
-                                    Select Gender
-                                </option>
-
-                                <option value="Male">
-                                    Male
-                                </option>
-
-                                <option value="Female">
-                                    Female
-                                </option>
-
-                                <option value="Other">
-                                    Other
-                                </option>
+                                <option value="">Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
                             </select>
                         ) : (
                             <span className="profile-detail-value">
                                 {user.gender || "Not provided"}
                             </span>
                         )}
-
                     </div>
 
                     {/* Phone Number */}
                     <div className="profile-detail-item">
-
-                        <span className="profile-detail-label">
+                        <label className="profile-detail-label">
                             Phone Number
-                        </span>
+                        </label>
 
                         {isEditing ? (
                             <input
@@ -266,6 +277,7 @@ function Profile() {
                                 value={formData.number}
                                 onChange={handleChange}
                                 className="profile-input"
+                                placeholder="Enter your phone number"
                                 required
                             />
                         ) : (
@@ -273,74 +285,73 @@ function Profile() {
                                 {user.number || "Not provided"}
                             </span>
                         )}
-
                     </div>
 
                     {/* Account Role */}
                     <div className="profile-detail-item">
-
-                        <span className="profile-detail-label">
+                        <label className="profile-detail-label">
                             Account Role
-                        </span>
+                        </label>
 
-                        <span className="profile-detail-value">
+                        <span className="profile-detail-value profile-role-value">
                             {user.role || "Not provided"}
                         </span>
-
                     </div>
 
-                    {/* Success/Error Message */}
+                    {/* Success / Error Message */}
                     {message && (
-                        <p
-                            className="profile-message"
-                            style={{
-                                color: isError ? "#c33f55" : "#25865d"
-                            }}
+                        <div
+                            className={`profile-message ${
+                                isError ? "profile-error" : "profile-success"
+                            }`}
+                            role="status"
                         >
+                            <span>
+                                {isError ? "!" : "✓"}
+                            </span>
                             {message}
-                        </p>
+                        </div>
                     )}
 
-                    {/* Buttons */}
-                    <div className="profile-actions">
+                    {/* Action Buttons */}
+                    {isEditing && (
+                        <div className="profile-actions">
 
-                        {isEditing ? (
-                            <>
-                                <button
-                                    type="submit"
-                                    className="profile-save-btn"
-                                    disabled={isLoading}
-                                >
-                                    {isLoading
-                                        ? "Saving..."
-                                        : "Save Changes"}
-                                </button>
+                            <button
+                                type="submit"
+                                className="profile-save-btn"
+                                disabled={isLoading}
+                            >
+                                {isLoading ? (
+                                    <>
+                                        <span className="profile-spinner"></span>
+                                        Saving...
+                                    </>
+                                ) : (
+                                    "Save Changes"
+                                )}
+                            </button>
 
-                                <button
-                                    type="button"
-                                    className="profile-cancel-btn"
-                                    onClick={handleCancel}
-                                    disabled={isLoading}
-                                >
-                                    Cancel
-                                </button>
-                            </>
-                        ) : (
                             <button
                                 type="button"
-                                className="profile-edit-btn"
-                                onClick={handleEdit}
+                                className="profile-cancel-btn"
+                                onClick={handleCancel}
+                                disabled={isLoading}
                             >
-                                Update Profile
+                                Cancel
                             </button>
-                        )}
 
-                    </div>
+                        </div>
+                    )}
 
                 </form>
 
-            </div>
+                {/* Footer */}
+                <div className="profile-footer">
+                    Your personal information is associated with your KeyEstate account.
+                </div>
 
+            </div>
         </div>
     );
 }
