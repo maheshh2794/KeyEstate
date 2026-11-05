@@ -38,14 +38,17 @@ const {
 const userModel = require("./models/userModel");
 const upload = require("./middleware/upload");
 
+// Database connection
 dbconnect();
 
+// Allowed frontend origins
 const allowedOrigins = [
     "http://localhost:5173",
     "https://key-estate-six.vercel.app",
     process.env.FRONTEND_URL
 ].filter(Boolean);
 
+// CORS configuration
 const corsOptions = {
     origin: function (origin, callback) {
         if (!origin || allowedOrigins.includes(origin)) {
@@ -61,9 +64,11 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
+// Body parsers
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
+// Static uploads
 app.use("/uploads", express.static("uploads"));
 
 // Authentication middleware
@@ -97,7 +102,7 @@ app.get("/login", async (req, res) => {
     try {
         const data = await userModel.find().select("-password");
 
-        res.send({
+        res.status(200).json({
             msg: "Users Details",
             users: data
         });
@@ -145,6 +150,23 @@ app.patch("/confirmbooking/:id", confirmBooking);
 app.post("/favorites", checkuser, addFavorites);
 
 app.get("/favorites/:id", checkuser, getFavorites);
+
+// Global error-handling middleware
+// Handles Multer errors and other middleware errors.
+app.use((err, req, res, next) => {
+    console.error("Server Error:", err);
+
+    if (err instanceof Error && err.name === "MulterError") {
+        return res.status(400).json({
+            message: "Image upload error",
+            error: err.message
+        });
+    }
+
+    res.status(err.status || 500).json({
+        message: err.message || "Internal Server Error"
+    });
+});
 
 // Start server
 const PORT = process.env.PORT || 5000;
