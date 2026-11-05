@@ -11,6 +11,7 @@ function Register() {
     gender: "",
     role: "",
     email: "",
+    number: "",
     password: ""
   })
 
@@ -41,6 +42,7 @@ function Register() {
         </div>
 
         <div className="register-form">
+
           <label className="register-label" htmlFor="name">Full Name</label>
           <input
             className="register-input"
@@ -54,7 +56,9 @@ function Register() {
           <input
             className="register-input"
             id="age"
-            type="text"
+            type="number"
+            min="1"
+            max="120"
             placeholder="Enter your age"
             onChange={(e) => setnewUser({ ...newUser, age: e.target.value })}
           />
@@ -97,11 +101,22 @@ function Register() {
             onChange={(e) => setnewUser({ ...newUser, email: e.target.value })}
           />
 
+          {/* Mobile Number */}
+          <label className="register-label" htmlFor="number">Mobile Number</label>
+          <input
+            className="register-input"
+            id="number"
+            type="tel"
+            placeholder="Enter your mobile number"
+            maxLength="10"
+            onChange={(e) => setnewUser({ ...newUser, number: e.target.value })}
+          />
+
           <label className="register-label" htmlFor="password">Password</label>
           <input
             className="register-input"
             id="password"
-            type="text"
+            type="password"
             placeholder="Create a password"
             onChange={(e) => setnewUser({ ...newUser, password: e.target.value })}
           />
@@ -109,6 +124,7 @@ function Register() {
           <button className="register-button" onClick={addUser}>
             Register
           </button>
+
         </div>
 
         <p className="register-footer">
