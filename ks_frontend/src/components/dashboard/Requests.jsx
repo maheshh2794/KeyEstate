@@ -1,6 +1,8 @@
+
 import {
     useConfirmBookingMutation,
     useGetBookingsbySellerQuery,
+    useLazyGetBookingsbySellerQuery,
     useGetDetailsQuery,
     useUpdateBookingStatusMutation,
     useGetDataQuery
@@ -12,21 +14,17 @@ import "./requests.css";
 function Requests() {
     const user = useSelector((state) => state.Ruser.id);
 
-    // Fetch seller bookings
     const {
-        data: sellerbookings = [],
-        refetch
+        data: sellerbookings = []
     } = useGetBookingsbySellerQuery(user, {
         skip: !user
     });
 
-    // Fetch all properties using getData API
     const {
         data: properties = [],
         isLoading: propertiesLoading
     } = useGetDataQuery();
 
-    // Fetch user details
     const {
         data: details = {}
     } = useGetDetailsQuery();
@@ -36,6 +34,10 @@ function Requests() {
     const [updateStatus] = useUpdateBookingStatusMutation();
     const [confirmBooking] = useConfirmBookingMutation();
 
+    // Lazy query for manually fetching seller bookings
+    const [getSellerBookings] =
+        useLazyGetBookingsbySellerQuery();
+
     // Reject booking
     async function rejectBooking(id) {
         try {
@@ -44,7 +46,8 @@ function Requests() {
                 status: "Cancelled"
             }).unwrap();
 
-            refetch();
+            await getSellerBookings(user).unwrap();
+
         } catch (error) {
             console.log("Reject booking error:", error);
         }
@@ -55,15 +58,12 @@ function Requests() {
         try {
             await confirmBooking(id).unwrap();
 
-            refetch();
+            await getSellerBookings(user).unwrap();
+
         } catch (error) {
             console.log("Confirm booking error:", error);
         }
     }
-
-    // Debug API responses
-    console.log("Properties:", properties);
-    console.log("Seller Bookings:", sellerbookings);
 
     return (
         <div className="requests-container">
@@ -74,8 +74,7 @@ function Requests() {
                 <p>Loading properties...</p>
             )}
 
-            {!Array.isArray(sellerbookings) ||
-            sellerbookings.length === 0 ? (
+            {sellerbookings.length === 0 ? (
 
                 <p className="no-requests">
                     No booking requests found.
@@ -87,25 +86,19 @@ function Requests() {
 
                     {sellerbookings.map((booking) => {
 
-                        // Get property ID from booking
                         const propertyId =
                             booking.property?._id ||
                             booking.property;
 
-                        // Match booking property with getData properties
-                        const property = Array.isArray(properties)
-                            ? properties.find(
-                                (item) =>
-                                    String(item._id) === String(propertyId)
-                            )
-                            : null;
+                        const property = properties.find(
+                            (item) =>
+                                String(item._id) === String(propertyId)
+                        );
 
-                        // Get buyer ID
                         const buyerId =
                             booking.user?._id ||
                             booking.user;
 
-                        // Find buyer
                         const buyer = users.find(
                             (item) =>
                                 String(item._id) === String(buyerId)
@@ -117,9 +110,7 @@ function Requests() {
                                 key={booking._id}
                             >
 
-                                {/* Property Image */}
                                 <div className="request-image-wrapper">
-
                                     <img
                                         className="request-image"
                                         src={
@@ -128,10 +119,8 @@ function Requests() {
                                         }
                                         alt={property?.title || "Property"}
                                     />
-
                                 </div>
 
-                                {/* Property and Booking Details */}
                                 <div className="request-details">
 
                                     <h3>
@@ -141,8 +130,7 @@ function Requests() {
 
                                     <p>
                                         <strong>Description:</strong>{" "}
-                                        {property?.description ||
-                                            "Not available"}
+                                        {property?.description || "Not available"}
                                     </p>
 
                                     <p>
@@ -168,22 +156,16 @@ function Requests() {
 
                                     <p>
                                         <strong>Message:</strong>{" "}
-                                        {booking.message ||
-                                            "No message"}
+                                        {booking.message || "No message"}
                                     </p>
 
                                     <p>
                                         <strong>Status:</strong>{" "}
-                                        <span
-                                            className={`request-status ${
-                                                booking.status?.toLowerCase()
-                                            }`}
-                                        >
+                                        <span className={`request-status ${booking.status?.toLowerCase()}`}>
                                             {booking.status}
                                         </span>
                                     </p>
 
-                                    {/* Confirm and Reject */}
                                     {booking.status === "Pending" && (
 
                                         <div className="request-actions">
@@ -191,9 +173,7 @@ function Requests() {
                                             <button
                                                 className="confirm-btn"
                                                 onClick={() =>
-                                                    confirmBookingfn(
-                                                        booking._id
-                                                    )
+                                                    confirmBookingfn(booking._id)
                                                 }
                                             >
                                                 Confirm
@@ -202,9 +182,7 @@ function Requests() {
                                             <button
                                                 className="reject-btn"
                                                 onClick={() =>
-                                                    rejectBooking(
-                                                        booking._id
-                                                    )
+                                                    rejectBooking(booking._id)
                                                 }
                                             >
                                                 Reject
