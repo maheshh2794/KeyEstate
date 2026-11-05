@@ -1,27 +1,39 @@
 
-.requests-title {
-  margin-bottom: 25px;
+/* Main Container */
+.requests-container {
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
+.requests-container h2 {
+  margin: 0 0 25px;
+  color: #26334b;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+/* Requests Grid */
 .requests-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
-  gap: 18px;
+  gap: 20px;
 }
 
+/* Request Card */
 .request-card {
   min-width: 0;
   padding: 22px;
   background: #fff;
   border: 1px solid #e7ebf2;
   border-radius: 15px;
-  box-shadow: 0 7px 22px rgba(30,48,85,.05);
-  transition: .2s ease;
+  box-shadow: 0 7px 22px rgba(30, 48, 85, 0.05);
+  transition: 0.2s ease;
 }
 
 .request-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(30,48,85,.09);
+  box-shadow: 0 12px 28px rgba(30, 48, 85, 0.09);
 }
 
 /* Property Image */
@@ -41,62 +53,64 @@
   display: block;
 }
 
-/* Property Details */
-.request-property-info {
-  padding-bottom: 15px;
-}
-
-.request-property-title {
-  margin: 0 0 10px;
-  color: #26334b;
-  font: 700 17px/1.4 'Manrope', sans-serif;
-}
-
-.request-property-description {
-  margin: 0 0 12px;
-  color: #68758b;
-  font-size: 13px;
-  line-height: 1.6;
-}
-
-.request-property-price {
-  margin: 0;
-  color: #2448bd;
-  font-size: 15px;
-  font-weight: 800;
-}
-
-/* Buyer Details */
+/* Property and Booking Details */
 .request-details {
   padding: 14px 0;
   border-top: 1px solid #edf0f5;
   border-bottom: 1px solid #edf0f5;
 }
 
-.request-detail {
+.request-details h3 {
+  margin: 0 0 14px;
+  color: #26334b;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.request-details p {
   margin: 0 0 11px;
   color: #68758b;
   font-size: 13px;
-  line-height: 1.5;
+  line-height: 1.6;
   overflow-wrap: anywhere;
 }
 
-.request-detail:last-child {
+.request-details p:last-child {
   margin-bottom: 0;
 }
 
-.request-detail strong {
+.request-details strong {
   color: #354159;
+  font-weight: 700;
 }
 
+/* Booking Status */
 .request-status {
   display: inline-flex;
-  padding: 4px 9px;
+  padding: 4px 10px;
   border-radius: 20px;
   color: #9a6a12;
   background: #fff6df;
   font-size: 11px;
   font-weight: 700;
+  text-transform: capitalize;
+}
+
+.request-status.confirmed {
+  color: #176c49;
+  background: #e5f7ed;
+}
+
+.request-status.cancelled,
+.request-status.rejected {
+  color: #c33f55;
+  background: #fff1f3;
+}
+
+.request-status.completed {
+  color: #2448bd;
+  background: #edf2ff;
 }
 
 /* Action Buttons */
@@ -106,15 +120,16 @@
   margin-top: 18px;
 }
 
-.request-btn {
-  min-height: 39px;
+.request-actions button {
+  min-height: 40px;
   flex: 1;
   padding: 0 13px;
   border: 1px solid transparent;
   border-radius: 8px;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
-  transition: .2s ease;
+  cursor: pointer;
+  transition: 0.2s ease;
 }
 
 .reject-btn {
@@ -138,6 +153,7 @@
   background: #176c49;
 }
 
+/* No Requests */
 .no-requests {
   padding: 34px;
   border: 1px dashed #d7deea;
@@ -148,12 +164,30 @@
 }
 
 /* Responsive */
+@media (max-width: 768px) {
+  .requests-container {
+    padding: 15px;
+  }
+
+  .requests-list {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+  }
+}
+
 @media (max-width: 480px) {
+  .requests-container h2 {
+    font-size: 21px;
+  }
+
   .request-card {
     padding: 16px;
   }
 
   .request-image-wrapper {
     height: 180px;
+  }
+
+  .request-actions button {
+    font-size: 12px;
   }
 }
