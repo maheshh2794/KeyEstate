@@ -13,9 +13,9 @@ function Login() {
   })
 
   const navigate = useNavigate()
-
   const dispatch = useDispatch()
-  const [loginUser] = useLoginUserMutation()
+
+  const [loginUser, { isLoading }] = useLoginUserMutation()
 
   function handleLogin() {
     loginUser(user)
@@ -23,10 +23,17 @@ function Login() {
         console.log(res)
 
         if (res.data?.token) {
-          dispatch(login({ token: res.data.token, name: res.data.name, email: res.data.email, gender: res.data.gender, role: res.data.role, id: res.data.id }))
+          dispatch(login({
+            token: res.data.token,
+            name: res.data.name,
+            email: res.data.email,
+            gender: res.data.gender,
+            role: res.data.role,
+            id: res.data.id
+          }))
 
           console.log("Token saved:", window.localStorage.getItem("token"))
-          window.localStorage.setItem("token", res.data.token);
+          window.localStorage.setItem("token", res.data.token)
 
           navigate('/home/property')
 
@@ -70,8 +77,12 @@ function Login() {
             }
           />
 
-          <button className="login-button" onClick={handleLogin}>
-            Login
+          <button
+            className="login-button"
+            onClick={handleLogin}
+            disabled={isLoading}
+          >
+            {isLoading ? 'Logging in...' : 'Login'}
           </button>
         </div>
 
