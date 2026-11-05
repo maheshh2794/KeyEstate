@@ -14,15 +14,12 @@ function Requests() {
   const { data: sellerbookings = [], refetch } =
     useGetBookingsbySellerQuery(user);
 
-  const { data: details = [] } = useGetDetailsQuery();
+  const { data: details = {} } = useGetDetailsQuery();
 
   const users = details.users || [];
 
-  console.log("User details:", details);
-  console.log("Users array:", users);
-  console.log("Seller bookings:", sellerbookings);
-
   const [updateStatus] = useUpdateBookingStatusMutation();
+  const [confirmBooking] = useConfirmBookingMutation();
 
   async function rejectBooking(id) {
     await updateStatus({
@@ -33,8 +30,6 @@ function Requests() {
     refetch();
   }
 
-  const [confirmBooking] = useConfirmBookingMutation();
-
   async function confirmBookingfn(id) {
     await confirmBooking(id);
     refetch();
@@ -42,28 +37,64 @@ function Requests() {
 
   return (
     <div className="requests-page">
+
       <h1 className="requests-title">Requests</h1>
 
       {sellerbookings.length === 0 ? (
         <p className="no-requests">No booking requests found.</p>
       ) : (
+
         <div className="requests-list">
+
           {sellerbookings.map((booking) => {
-            const buyerId =
-              booking.user?._id || booking.user;
+
+            const buyerId = booking.user?._id || booking.user;
 
             const buyer = users.find(
-              (item) =>
-                String(item._id) === String(buyerId)
+              (item) => String(item._id) === String(buyerId)
             );
+
+            const property =
+              typeof booking.property === "object"
+                ? booking.property
+                : null;
 
             return (
               <div className="request-card" key={booking._id}>
-                <h3 className="request-property-title">
-                  {booking.property?.title || "Property"}
-                </h3>
 
+                {/* Property Image */}
+                <div className="request-image-wrapper">
+                  <img
+                    className="request-image"
+                    src={
+                      property?.images?.[0]
+                        ? property.images[0]
+                        : '/default-property.jpg'
+                    }
+                    alt={property?.title || "Property"}
+                  />
+                </div>
+
+                {/* Property Details */}
+                <div className="request-property-info">
+
+                  <h3 className="request-property-title">
+                    {property?.title || "Property"}
+                  </h3>
+
+                  <p className="request-property-description">
+                    {property?.description || "No description available"}
+                  </p>
+
+                  <p className="request-property-price">
+                    Price: ₹{property?.price?.toLocaleString('en-IN') || "Not available"}
+                  </p>
+
+                </div>
+
+                {/* Buyer Details */}
                 <div className="request-details">
+
                   <p className="request-detail">
                     <strong>Buyer:</strong>{" "}
                     {buyer?.name || booking.user?.name || "Unknown"}
@@ -80,9 +111,12 @@ function Requests() {
                       {booking.status || "Pending"}
                     </span>
                   </p>
+
                 </div>
 
+                {/* Booking Actions */}
                 <div className="request-actions">
+
                   <button
                     className="request-btn reject-btn"
                     onClick={() => rejectBooking(booking._id)}
@@ -96,12 +130,16 @@ function Requests() {
                   >
                     Confirm
                   </button>
+
                 </div>
+
               </div>
             );
           })}
+
         </div>
       )}
+
     </div>
   );
 }
