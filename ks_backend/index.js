@@ -98,7 +98,7 @@ app.get("/login", async (req, res) => {
 });
 
 // Property routes
-app.post("/addproperty", checkuser, upload.single("images"), addProperty);
+app.post("/addproperty", checkuser, upload.array("images", 10), addProperty);
 app.get("/property", checkuser, getProperties);
 app.delete("/deleteproperty/:id", checkuser, deleteProperty);
 
