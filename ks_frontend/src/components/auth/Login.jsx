@@ -17,26 +17,24 @@ function Login() {
 
   const [loginUser, { isLoading }] = useLoginUserMutation()
 
-  function handleLogin() {
+  function handleLogin(e) {
+    e.preventDefault()
+
     loginUser(user)
       .then((res) => {
-        console.log(res)
-
         if (res.data?.token) {
           dispatch(login({
             token: res.data.token,
             name: res.data.name,
             email: res.data.email,
+            age: res.data.age,
             gender: res.data.gender,
+            number: res.data.number,
             role: res.data.role,
             id: res.data.id
           }))
 
-          console.log("Token saved:", window.localStorage.getItem("token"))
-          window.localStorage.setItem("token", res.data.token)
-
           navigate('/home/property')
-
         } else {
           console.log("Login failed:", res.error || res.data)
         }
@@ -51,10 +49,12 @@ function Login() {
       <div className="login-card">
         <div className="login-header">
           <h1 className="login-title">Welcome Back</h1>
-          <p className="login-subtitle">Sign in to your KeyEstate account</p>
+          <p className="login-subtitle">
+            Sign in to your KeyEstate account
+          </p>
         </div>
 
-        <div className="login-form">
+        <form className="login-form" onSubmit={handleLogin}>
           <label className="login-label">Email Address</label>
           <input
             className="login-input"
@@ -64,6 +64,7 @@ function Login() {
             onChange={(e) =>
               setUser({ ...user, email: e.target.value })
             }
+            required
           />
 
           <label className="login-label">Password</label>
@@ -75,16 +76,17 @@ function Login() {
             onChange={(e) =>
               setUser({ ...user, password: e.target.value })
             }
+            required
           />
 
           <button
             className="login-button"
-            onClick={handleLogin}
+            type="submit"
             disabled={isLoading}
           >
             {isLoading ? 'Logging in...' : 'Login'}
           </button>
-        </div>
+        </form>
 
         <p className="login-footer">
           Don't have an account? <a href="/register">Register here</a>
