@@ -1,10 +1,12 @@
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useAddPropertyMutation } from '../../services/registerApi'
 import './addproperty.css'
 
 function AddProperty() {
   const [addProperty, { isLoading, isSuccess, error }] = useAddPropertyMutation()
+
+  const imageInputRef = useRef(null)
 
   const [formData, setFormData] = useState({
     title: '',
@@ -92,7 +94,38 @@ function AddProperty() {
       )
     )
 
-    await addProperty(propertyData)
+    try {
+      await addProperty(propertyData).unwrap()
+
+      // Clear all input fields after successful submission
+      setFormData({
+        title: '',
+        propertyType: '',
+        description: '',
+        listingType: '',
+        price: '',
+        street: '',
+        locality: '',
+        city: '',
+        state: '',
+        pincode: '',
+        bedrooms: '0',
+        bathrooms: '0',
+        area: '',
+        areaUnit: 'sqft',
+        furnishing: 'Unfurnished',
+        images: [],
+        amenities: ''
+      })
+
+      // Clear selected image files
+      if (imageInputRef.current) {
+        imageInputRef.current.value = ''
+      }
+
+    } catch (error) {
+      console.log("Add property error:", error)
+    }
   }
 
   return (
@@ -105,10 +138,12 @@ function AddProperty() {
       </div>
 
       <form className="add-property-card" onSubmit={handleSubmit}>
+
         <div className="add-property-section">
           <h2 className="add-property-section-title">Basic Information</h2>
 
           <div className="add-property-grid">
+
             <div className="add-property-field">
               <label className="add-property-label">Title</label>
               <input
@@ -181,6 +216,7 @@ function AddProperty() {
                 required
               />
             </div>
+
           </div>
         </div>
 
@@ -188,6 +224,7 @@ function AddProperty() {
           <h2 className="add-property-section-title">Address Details</h2>
 
           <div className="add-property-grid">
+
             <div className="add-property-field">
               <label className="add-property-label">Street</label>
               <input
@@ -250,6 +287,7 @@ function AddProperty() {
                 placeholder="Enter pincode"
               />
             </div>
+
           </div>
         </div>
 
@@ -257,6 +295,7 @@ function AddProperty() {
           <h2 className="add-property-section-title">Property Features</h2>
 
           <div className="add-property-grid">
+
             <div className="add-property-field">
               <label className="add-property-label">Bedrooms</label>
               <input
@@ -328,6 +367,7 @@ function AddProperty() {
                 Property Images (Maximum 10)
               </label>
               <input
+                ref={imageInputRef}
                 className="add-property-input"
                 type="file"
                 name="images"
@@ -353,6 +393,7 @@ function AddProperty() {
                 placeholder="e.g. Parking, Swimming Pool, Gym"
               />
             </div>
+
           </div>
         </div>
 
@@ -366,7 +407,9 @@ function AddProperty() {
           </button>
         </div>
 
-        {isSuccess && <p>Property added successfully!</p>}
+        {isSuccess && (
+          <p>Property added successfully!</p>
+        )}
 
         {error && (
           <p>
@@ -377,6 +420,7 @@ function AddProperty() {
             }
           </p>
         )}
+
       </form>
     </div>
   )
