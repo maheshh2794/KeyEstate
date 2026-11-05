@@ -1,3 +1,4 @@
+
 import { useSelector } from "react-redux"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
@@ -79,7 +80,7 @@ function ViewProperty() {
                         className="property-image"
                         src={
                             property.images?.[0]
-                                ? `https://keyestate.onrender.com${property.images[0]}`
+                                ? property.images[0]
                                 : '/default-property.jpg'
                         }
                         alt={property.title}
@@ -184,6 +185,7 @@ function ViewProperty() {
                                 onChange={(e) => setMessage(e.target.value)}
                                 placeholder="Enter a message for the owner"
                             />
+
                             <button
                                 type="button"
                                 disabled={bookingLoading}
@@ -196,6 +198,7 @@ function ViewProperty() {
                         </div>
 
                         }
+
                         {
                             alreadyBooked && <div className="view-property-booking-controls">
                                 <h2>You already Booked this property</h2>
