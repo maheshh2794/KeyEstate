@@ -20,12 +20,12 @@ export const userSlice = createSlice({
     reducers: {
         login: (state, { payload }) => {
             state.token = payload.token
-            state.name = payload.name
-            state.email = payload.email
-            state.age = payload.age ?? null
-            state.gender = payload.gender
-            state.number = payload.number ?? null
-            state.role = payload.role
+            state.name = payload.name || ""
+            state.email = payload.email || ""
+            state.age = payload.age ?? ""
+            state.gender = payload.gender || ""
+            state.number = payload.number ?? ""
+            state.role = payload.role || ""
             state.id = payload.id
 
             window.localStorage.setItem("token", payload.token)
@@ -36,6 +36,20 @@ export const userSlice = createSlice({
             window.localStorage.setItem("number", payload.number ?? "")
             window.localStorage.setItem("role", payload.role || "")
             window.localStorage.setItem("id", payload.id)
+        },
+
+        updateUser: (state, { payload }) => {
+            state.name = payload.name
+            state.email = payload.email
+            state.age = payload.age
+            state.gender = payload.gender
+            state.number = payload.number
+
+            window.localStorage.setItem("name", payload.name)
+            window.localStorage.setItem("email", payload.email)
+            window.localStorage.setItem("age", payload.age ?? "")
+            window.localStorage.setItem("gender", payload.gender)
+            window.localStorage.setItem("number", payload.number)
         },
 
         logout: (state) => {
@@ -67,8 +81,11 @@ export const userSlice = createSlice({
     }
 })
 
-export const { login, logout, viewproperty } = userSlice.actions
+export const {
+    login,
+    logout,
+    viewproperty,
+    updateUser
+} = userSlice.actions
 
-const userReducer = userSlice.reducer
-
-export default userReducer
+export default userSlice.reducer
