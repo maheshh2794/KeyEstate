@@ -167,21 +167,6 @@ function Requests() {
                                     </p>
 
                                     <p>
-                                        <strong>Visit Date:</strong>{" "}
-                                        {booking.visitDate
-                                            ? new Date(
-                                                booking.visitDate
-                                            ).toLocaleDateString()
-                                            : "Not available"}
-                                    </p>
-
-                                    <p>
-                                        <strong>Visit Time:</strong>{" "}
-                                        {booking.visitTime ||
-                                            "Not available"}
-                                    </p>
-
-                                    <p>
                                         <strong>Message:</strong>{" "}
                                         {booking.message ||
                                             "No message"}
