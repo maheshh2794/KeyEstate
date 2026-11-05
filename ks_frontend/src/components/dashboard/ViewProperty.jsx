@@ -1,6 +1,6 @@
 
 import { useSelector } from "react-redux"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import './viewproperty.css'
 
@@ -16,6 +16,8 @@ function ViewProperty() {
     const propertyid = useSelector((state) => state.Ruser.property)
 
     const [message, setMessage] = useState('')
+    const [activeImage, setActiveImage] = useState(0)
+
     const navigate = useNavigate()
 
     const {
@@ -32,6 +34,10 @@ function ViewProperty() {
     const [getBookfn] = useLazyGetBookingsbyUserQuery()
 
     const { data: userbookings } = useGetBookingsbyUserQuery(user)
+
+    useEffect(() => {
+        setActiveImage(0)
+    }, [propertyid])
 
     async function addfn(propertyid, sellerid) {
         await addBookfn({
@@ -57,8 +63,23 @@ function ViewProperty() {
         return <p className="view-property-message">Property not found.</p>
     }
 
-    const alreadyBooked = userbookings?.some((booking) => booking.property === property._id)
-    console.log("Already Booked:", alreadyBooked)
+    const images = property.images || []
+
+    const alreadyBooked = userbookings?.some(
+        (booking) => booking.property === property._id
+    )
+
+    const previousImage = () => {
+        setActiveImage((current) =>
+            current === 0 ? images.length - 1 : current - 1
+        )
+    }
+
+    const nextImage = () => {
+        setActiveImage((current) =>
+            current === images.length - 1 ? 0 : current + 1
+        )
+    }
 
     return (
         <div className="view-property-page">
@@ -75,16 +96,70 @@ function ViewProperty() {
 
             <div className="view-property-card">
 
-                <div className="property-image-wrapper">
-                    <img
-                        className="property-image"
-                        src={
-                            property.images?.[0]
-                                ? property.images[0]
-                                : '/default-property.jpg'
-                        }
-                        alt={property.title}
-                    />
+                {/* Property Image Gallery */}
+                <div className="property-gallery">
+
+                    <div className="property-main-image">
+
+                        <img
+                            src={
+                                images.length > 0
+                                    ? images[activeImage]
+                                    : '/default-property.jpg'
+                            }
+                            alt={property.title}
+                        />
+
+                        {images.length > 1 && (
+                            <>
+                                <button
+                                    type="button"
+                                    className="gallery-arrow gallery-prev"
+                                    onClick={previousImage}
+                                >
+                                    ❮
+                                </button>
+
+                                <button
+                                    type="button"
+                                    className="gallery-arrow gallery-next"
+                                    onClick={nextImage}
+                                >
+                                    ❯
+                                </button>
+
+                                <span className="gallery-counter">
+                                    {activeImage + 1} / {images.length}
+                                </span>
+                            </>
+                        )}
+
+                    </div>
+
+                    {images.length > 1 && (
+                        <div className="property-thumbnails">
+
+                            {images.map((image, index) => (
+
+                                <button
+                                    type="button"
+                                    key={index}
+                                    className={`property-thumbnail ${
+                                        activeImage === index ? 'active' : ''
+                                    }`}
+                                    onClick={() => setActiveImage(index)}
+                                >
+                                    <img
+                                        src={image}
+                                        alt={`Property ${index + 1}`}
+                                    />
+                                </button>
+
+                            ))}
+
+                        </div>
+                    )}
+
                 </div>
 
                 <div className="view-property-content">
@@ -176,35 +251,37 @@ function ViewProperty() {
 
                     <div>
 
-                        {!alreadyBooked && <div className="view-property-booking-controls">
-                            <h3>Interested in this property?</h3>
+                        {!alreadyBooked && (
+                            <div className="view-property-booking-controls">
+                                <h3>Interested in this property?</h3>
 
-                            <input
-                                type="text"
-                                value={message}
-                                onChange={(e) => setMessage(e.target.value)}
-                                placeholder="Enter a message for the owner"
-                            />
+                                <input
+                                    type="text"
+                                    value={message}
+                                    onChange={(e) => setMessage(e.target.value)}
+                                    placeholder="Enter a message for the owner"
+                                />
 
-                            <button
-                                type="button"
-                                disabled={bookingLoading}
-                                onClick={() => addfn(property._id, property.listedBy)}
-                            >
-                                {bookingLoading
-                                    ? 'Adding Booking...'
-                                    : 'Add Booking'}
-                            </button>
-                        </div>
-
-                        }
-
-                        {
-                            alreadyBooked && <div className="view-property-booking-controls">
-                                <h2>You already Booked this property</h2>
-                                <button onClick={() => { navigate('/home/property') }}>Go Back</button>
+                                <button
+                                    type="button"
+                                    disabled={bookingLoading}
+                                    onClick={() => addfn(property._id, property.listedBy)}
+                                >
+                                    {bookingLoading
+                                        ? 'Adding Booking...'
+                                        : 'Add Booking'}
+                                </button>
                             </div>
-                        }
+                        )}
+
+                        {alreadyBooked && (
+                            <div className="view-property-booking-controls">
+                                <h2>You already Booked this property</h2>
+                                <button onClick={() => navigate('/home/property')}>
+                                    Go Back
+                                </button>
+                            </div>
+                        )}
 
                     </div>
 
