@@ -10,15 +10,44 @@ import './listing.css'
 function Listing() {
   const user = useSelector((state) => state.Ruser.id)
 
-  const { data: properties = [] } = useGetDataQuery()
+  const {
+    data: properties = [],
+    isLoading,
+    isError
+  } = useGetDataQuery()
 
   const [deleteProperty] = useDeletePropertyMutation()
   const [getData] = useLazyGetDataQuery()
 
   async function deletefn(id) {
-    await deleteProperty(id)
-    getData()
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this property?"
+    )
+
+    if (!confirmDelete) return
+
+    try {
+      await deleteProperty(id).unwrap()
+      await getData()
+    } catch (error) {
+      console.error("Delete property failed:", error)
+      alert(error?.data?.msg || "Unable to delete property")
+    }
   }
+
+  if (isLoading) {
+    return <div className="listing-page">Loading listings...</div>
+  }
+
+  if (isError) {
+    return <div className="listing-page">Unable to load listings.</div>
+  }
+
+  const userProperties = properties.filter((property) => {
+    const listedBy = property?.listedBy?._id || property?.listedBy
+
+    return user && listedBy && String(listedBy) === String(user)
+  })
 
   return (
     <div className="listing-page">
@@ -29,67 +58,61 @@ function Listing() {
 
       <div className="listing-grid">
 
-        {properties.map((property) => {
-          const listedBy =
-            property?.listedBy?._id || property?.listedBy
+        {userProperties.length > 0 ? (
+          userProperties.map((property) => (
 
-          if (
-            user &&
-            listedBy &&
-            String(listedBy) === String(user)
-          ) {
+            <div
+              key={property._id}
+              className="listing-card"
+            >
 
-            return (
-              <div
-                key={property._id}
-                className="listing-card"
-              >
+              <div className="listing-image-wrapper">
+                <img
+                  className="listing-image"
+                  src={
+                    property.images?.[0]
+                      ? property.images[0]
+                      : '/default-property.jpg'
+                  }
+                  alt={property.title}
+                />
+              </div>
 
-                <div className="listing-image-wrapper">
-                  <img
-                    className="listing-image"
-                    src={
-                      property.images?.[0]
-                        ? property.images[0]
-                        : '/default-property.jpg'
-                    }
-                    alt={property.title}
-                  />
-                </div>
+              <div className="listing-card-content">
+                <h3 className="listing-property-title">
+                  {property.title}
+                </h3>
 
-                <div className="listing-card-content">
-                  <h3 className="listing-property-title">
-                    {property.title}
-                  </h3>
+                <div className="listing-card-footer">
+                  <div className="listing-price">
+                    <span className="listing-price-label">
+                      Price
+                    </span>
 
-                  <div className="listing-card-footer">
-                    <div className="listing-price">
-                      <span className="listing-price-label">
-                        Price
-                      </span>
-
-                      <span className="listing-price-value">
-                        ₹{property.price?.toLocaleString('en-IN')}
-                      </span>
-                    </div>
+                    <span className="listing-price-value">
+                      ₹{property.price?.toLocaleString('en-IN')}
+                    </span>
                   </div>
                 </div>
-
-                <div className="listing-delete-container">
-                  <button
-                    className="listing-delete-button"
-                    onClick={() => deletefn(property._id)}
-                  >
-                    Delete
-                  </button>
-                </div>
-
               </div>
-            )
-          }
 
-          return null
-        })}
+              <div className="listing-delete-container">
+                <button
+                  className="listing-delete-button"
+                  onClick={() => deletefn(property._id)}
+                >
+                  Delete
+                </button>
+              </div>
+
+            </div>
+
+          ))
+        ) : (
+          <p className="listing-empty">
+            You haven't listed any properties yet.
+          </p>
+        )}
 
       </div>
     </div>
