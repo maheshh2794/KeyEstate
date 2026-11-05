@@ -7,6 +7,7 @@ const jwt = require("jsonwebtoken");
 const cors = require("cors");
 
 const dbconnect = require("./dbconnection/dbConnection");
+
 const { userRegister } = require("./routes/userRouter");
 const { loginRouter } = require("./routes/authRouter");
 
@@ -25,7 +26,15 @@ const {
     confirmBooking
 } = require("./controllers/bookingController");
 
-const { addFavorites, getFavorites } = require("./controllers/favoriteController");
+const {
+    addFavorites,
+    getFavorites
+} = require("./controllers/favoriteController");
+
+const {
+    updateProfile
+} = require("./controllers/authController");
+
 const userModel = require("./models/userModel");
 const upload = require("./middleware/upload");
 
@@ -51,17 +60,17 @@ const corsOptions = {
     optionsSuccessStatus: 204
 };
 
-// Apply CORS before all routes
+// Apply CORS
 app.use(cors(corsOptions));
 
-// Body parsers
+// Body Parsers
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-// Static uploads folder
+// Static Uploads
 app.use("/uploads", express.static("uploads"));
 
-// Authentication middleware
+// Authentication Middleware
 function checkuser(req, res, next) {
     const token = req.headers.token;
 
@@ -71,51 +80,95 @@ function checkuser(req, res, next) {
         });
     }
 
-    jwt.verify(token, process.env.JWT_SECRET, (error, decoded) => {
-        if (error) {
-            return res.status(401).json({
-                msg: "Invalid or expired token"
-            });
-        }
+    jwt.verify(
+        token,
+        process.env.JWT_SECRET,
+        (error, decoded) => {
+            if (error) {
+                return res.status(401).json({
+                    msg: "Invalid or expired token"
+                });
+            }
 
-        req.user = decoded;
-        next();
-    });
+            req.user = decoded;
+            next();
+        }
+    );
 }
 
-// User routes
+// User Routes
 app.use("/", userRegister);
 app.use("/", loginRouter);
 
-// Get users
+// Get Users Details
 app.get("/login", async (req, res) => {
-    const data = await userModel.find();
+    try {
+        const data = await userModel.find()
+            .select("-password");
 
-    res.send({
-        msg: "Users Details",
-        users: data
-    });
+        res.send({
+            msg: "Users Details",
+            users: data
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            msg: "Unable to get users",
+            error: error.message
+        });
+    }
 });
 
-// Property routes
-app.post("/addproperty", checkuser, upload.array("images", 10), addProperty);
-app.get("/property", checkuser, getProperties);
-app.delete("/deleteproperty/:id", checkuser, deleteProperty);
+// Update Logged-in User Profile
+app.put("/updateprofile", checkuser, updateProfile);
 
-// Booking routes
+// Property Routes
+app.post(
+    "/addproperty",
+    checkuser,
+    upload.array("images", 10),
+    addProperty
+);
+
+app.get("/property", checkuser, getProperties);
+
+app.delete(
+    "/deleteproperty/:id",
+    checkuser,
+    deleteProperty
+);
+
+// Booking Routes
 app.post("/bookings", checkuser, addBooking);
-app.get("/bookings/:userid", checkuser, getBookingsbyUser);
-app.get("/bookings/requests/:sellerid", checkuser, getBookingsbySeller);
-app.delete("/bookings/:id", checkuser, deleteBookings);
+
+app.get(
+    "/bookings/:userid",
+    checkuser,
+    getBookingsbyUser
+);
+
+app.get(
+    "/bookings/requests/:sellerid",
+    checkuser,
+    getBookingsbySeller
+);
+
+app.delete(
+    "/bookings/:id",
+    checkuser,
+    deleteBookings
+);
 
 app.patch("/updatebooking/:id", updateBookingStatus);
+
 app.patch("/confirmbooking/:id", confirmBooking);
 
-// Favorite routes
+// Favorite Routes
 app.post("/favorites", checkuser, addFavorites);
+
 app.get("/favorites/:id", checkuser, getFavorites);
 
-// Start server
+// Start Server
 const PORT = process.env.PORT || 4000;
 
 app.listen(PORT, () => {
