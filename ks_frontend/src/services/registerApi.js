@@ -35,15 +35,15 @@ export const registerApi = createApi({
 
         // Update Profile
         updateProfile: builder.mutation({
-            query: (profileData) => ({
-                url: '/updateprofile',
-                method: 'PUT',
-                body: profileData,
-                headers: {
-                    token: window.localStorage.getItem('token') || ''
-                }
-            })
-        }),
+    query: (profileData) => ({
+        url: "/updateprofile",
+        method: "PUT",
+        body: profileData,
+        headers: {
+            token: window.localStorage.getItem("token") || ""
+        }
+    })
+}),
 
         // Get Properties
         getData: builder.query({
