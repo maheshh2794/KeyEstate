@@ -62,7 +62,7 @@
 
 .nav-register:hover,
 .nav-logout:hover {
-  background: #2445b5;
+  background: red;
   transform: translateY(-1px);
 }
 
