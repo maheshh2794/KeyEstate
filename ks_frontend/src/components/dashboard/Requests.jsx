@@ -1,147 +1,245 @@
-
 import {
-  useConfirmBookingMutation,
-  useGetBookingsbySellerQuery,
-  useGetDetailsQuery,
-  useUpdateBookingStatusMutation
+    useConfirmBookingMutation,
+    useGetBookingsbySellerQuery,
+    useGetDetailsQuery,
+    useUpdateBookingStatusMutation,
+    useGetDataQuery
 } from "../../services/registerApi";
+
 import { useSelector } from "react-redux";
 import "./requests.css";
 
 function Requests() {
-  const user = useSelector((state) => state.Ruser.id);
+    const user = useSelector((state) => state.Ruser.id);
 
-  const { data: sellerbookings = [], refetch } =
-    useGetBookingsbySellerQuery(user);
-
-  const { data: details = {} } = useGetDetailsQuery();
-
-  const users = details.users || [];
-
-  const [updateStatus] = useUpdateBookingStatusMutation();
-  const [confirmBooking] = useConfirmBookingMutation();
-
-  async function rejectBooking(id) {
-    await updateStatus({
-      id: id,
-      status: "Cancelled"
+    // Fetch seller bookings
+    const {
+        data: sellerbookings = [],
+        refetch
+    } = useGetBookingsbySellerQuery(user, {
+        skip: !user
     });
 
-    refetch();
-  }
+    // Fetch all properties using getData API
+    const {
+        data: properties = [],
+        isLoading: propertiesLoading
+    } = useGetDataQuery();
 
-  async function confirmBookingfn(id) {
-    await confirmBooking(id);
-    refetch();
-  }
+    // Fetch user details
+    const {
+        data: details = {}
+    } = useGetDetailsQuery();
 
-  return (
-    <div className="requests-page">
+    const users = details?.users || [];
 
-      <h1 className="requests-title">Requests</h1>
+    const [updateStatus] = useUpdateBookingStatusMutation();
+    const [confirmBooking] = useConfirmBookingMutation();
 
-      {sellerbookings.length === 0 ? (
-        <p className="no-requests">No booking requests found.</p>
-      ) : (
+    // Reject booking
+    async function rejectBooking(id) {
+        try {
+            await updateStatus({
+                id,
+                status: "Cancelled"
+            }).unwrap();
 
-        <div className="requests-list">
+            refetch();
+        } catch (error) {
+            console.log("Reject booking error:", error);
+        }
+    }
 
-          {sellerbookings.map((booking) => {
+    // Confirm booking
+    async function confirmBookingfn(id) {
+        try {
+            await confirmBooking(id).unwrap();
 
-            const buyerId = booking.user?._id || booking.user;
+            refetch();
+        } catch (error) {
+            console.log("Confirm booking error:", error);
+        }
+    }
 
-            const buyer = users.find(
-              (item) => String(item._id) === String(buyerId)
-            );
+    // Debug API responses
+    console.log("Properties:", properties);
+    console.log("Seller Bookings:", sellerbookings);
 
-            const property =
-              typeof booking.property === "object"
-                ? booking.property
-                : null;
+    return (
+        <div className="requests-container">
 
-            return (
-              <div className="request-card" key={booking._id}>
+            <h2>Booking Requests</h2>
 
-                {/* Property Image */}
-                <div className="request-image-wrapper">
-                  <img
-                    className="request-image"
-                    src={
-                      property?.images?.[0]
-                        ? property.images[0]
-                        : '/default-property.jpg'
-                    }
-                    alt={property?.title || "Property"}
-                  />
+            {propertiesLoading && (
+                <p>Loading properties...</p>
+            )}
+
+            {!Array.isArray(sellerbookings) ||
+            sellerbookings.length === 0 ? (
+
+                <p className="no-requests">
+                    No booking requests found.
+                </p>
+
+            ) : (
+
+                <div className="requests-list">
+
+                    {sellerbookings.map((booking) => {
+
+                        // Get property ID from booking
+                        const propertyId =
+                            booking.property?._id ||
+                            booking.property;
+
+                        // Match booking property with getData properties
+                        const property = Array.isArray(properties)
+                            ? properties.find(
+                                (item) =>
+                                    String(item._id) === String(propertyId)
+                            )
+                            : null;
+
+                        // Get buyer ID
+                        const buyerId =
+                            booking.user?._id ||
+                            booking.user;
+
+                        // Find buyer
+                        const buyer = users.find(
+                            (item) =>
+                                String(item._id) === String(buyerId)
+                        );
+
+                        return (
+                            <div
+                                className="request-card"
+                                key={booking._id}
+                            >
+
+                                {/* Property Image */}
+                                <div className="request-image-wrapper">
+
+                                    <img
+                                        className="request-image"
+                                        src={
+                                            property?.images?.[0] ||
+                                            "/default-property.jpg"
+                                        }
+                                        alt={property?.title || "Property"}
+                                    />
+
+                                </div>
+
+                                {/* Property and Booking Details */}
+                                <div className="request-details">
+
+                                    <h3>
+                                        {property?.title ||
+                                            "Property details unavailable"}
+                                    </h3>
+
+                                    <p>
+                                        <strong>Description:</strong>{" "}
+                                        {property?.description ||
+                                            "Not available"}
+                                    </p>
+
+                                    <p>
+                                        <strong>Price:</strong>{" "}
+                                        {property?.price != null
+                                            ? `₹${property.price}`
+                                            : "Not available"}
+                                    </p>
+
+                                    <p>
+                                        <strong>Buyer Name:</strong>{" "}
+                                        {buyer?.name ||
+                                            booking.user?.name ||
+                                            "Not available"}
+                                    </p>
+
+                                    <p>
+                                        <strong>Buyer Email:</strong>{" "}
+                                        {buyer?.email ||
+                                            booking.user?.email ||
+                                            "Not available"}
+                                    </p>
+
+                                    <p>
+                                        <strong>Visit Date:</strong>{" "}
+                                        {booking.visitDate
+                                            ? new Date(
+                                                booking.visitDate
+                                            ).toLocaleDateString()
+                                            : "Not available"}
+                                    </p>
+
+                                    <p>
+                                        <strong>Visit Time:</strong>{" "}
+                                        {booking.visitTime ||
+                                            "Not available"}
+                                    </p>
+
+                                    <p>
+                                        <strong>Message:</strong>{" "}
+                                        {booking.message ||
+                                            "No message"}
+                                    </p>
+
+                                    <p>
+                                        <strong>Status:</strong>{" "}
+                                        <span
+                                            className={`request-status ${
+                                                booking.status?.toLowerCase()
+                                            }`}
+                                        >
+                                            {booking.status}
+                                        </span>
+                                    </p>
+
+                                    {/* Confirm and Reject */}
+                                    {booking.status === "Pending" && (
+
+                                        <div className="request-actions">
+
+                                            <button
+                                                className="confirm-btn"
+                                                onClick={() =>
+                                                    confirmBookingfn(
+                                                        booking._id
+                                                    )
+                                                }
+                                            >
+                                                Confirm
+                                            </button>
+
+                                            <button
+                                                className="reject-btn"
+                                                onClick={() =>
+                                                    rejectBooking(
+                                                        booking._id
+                                                    )
+                                                }
+                                            >
+                                                Reject
+                                            </button>
+
+                                        </div>
+
+                                    )}
+
+                                </div>
+
+                            </div>
+                        );
+                    })}
+
                 </div>
-
-                {/* Property Details */}
-                <div className="request-property-info">
-
-                  <h3 className="request-property-title">
-                    {property?.title || "Property"}
-                  </h3>
-
-                  <p className="request-property-description">
-                    {property?.description || "No description available"}
-                  </p>
-
-                  <p className="request-property-price">
-                    Price: ₹{property?.price?.toLocaleString('en-IN') || "Not available"}
-                  </p>
-
-                </div>
-
-                {/* Buyer Details */}
-                <div className="request-details">
-
-                  <p className="request-detail">
-                    <strong>Buyer:</strong>{" "}
-                    {buyer?.name || booking.user?.name || "Unknown"}
-                  </p>
-
-                  <p className="request-detail">
-                    <strong>Email:</strong>{" "}
-                    {buyer?.email || booking.user?.email || "Not available"}
-                  </p>
-
-                  <p className="request-detail">
-                    <strong>Status:</strong>{" "}
-                    <span className="request-status">
-                      {booking.status || "Pending"}
-                    </span>
-                  </p>
-
-                </div>
-
-                {/* Booking Actions */}
-                <div className="request-actions">
-
-                  <button
-                    className="request-btn reject-btn"
-                    onClick={() => rejectBooking(booking._id)}
-                  >
-                    Reject
-                  </button>
-
-                  <button
-                    className="request-btn confirm-btn"
-                    onClick={() => confirmBookingfn(booking._id)}
-                  >
-                    Confirm
-                  </button>
-
-                </div>
-
-              </div>
-            );
-          })}
+            )}
 
         </div>
-      )}
-
-    </div>
-  );
+    );
 }
 
 export default Requests;
