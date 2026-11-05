@@ -155,6 +155,13 @@ function Requests() {
                                     </p>
 
                                     <p>
+                                        <strong>Buyer Number:</strong>{" "}
+                                        {buyer?.number ||
+                                            booking.user?.number ||
+                                            "Not available"}
+                                    </p>
+
+                                    <p>
                                         <strong>Message:</strong>{" "}
                                         {booking.message || "No message"}
                                     </p>
