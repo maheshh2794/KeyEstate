@@ -103,7 +103,7 @@ function Property() {
     )
   })
 
-  // All hooks are above conditional returns
+  // Loading
   if (isLoading) {
     return (
       <p className="property-message">
@@ -112,6 +112,7 @@ function Property() {
     )
   }
 
+  // Error
   if (isError) {
     return (
       <p className="property-message property-error">
@@ -274,7 +275,7 @@ function Property() {
                   className="property-image"
                   src={
                     property.images?.[0]
-                      ? `https://keyestate.onrender.com${property.images[0]}`
+                      ? property.images[0]
                       : '/default-property.jpg'
                   }
                   alt={property.title}
