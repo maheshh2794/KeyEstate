@@ -1,3 +1,4 @@
+
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 export const registerApi = createApi({
@@ -9,6 +10,7 @@ export const registerApi = createApi({
 
     endpoints: (builder) => ({
 
+        // Login
         loginUser: builder.mutation({
             query: (credentials) => ({
                 url: '/login',
@@ -20,6 +22,7 @@ export const registerApi = createApi({
             })
         }),
 
+        // Get User Details
         getDetails: builder.query({
             query: () => ({
                 url: '/login',
@@ -30,6 +33,19 @@ export const registerApi = createApi({
             })
         }),
 
+        // Update Profile
+        updateProfile: builder.mutation({
+            query: (profileData) => ({
+                url: '/updateprofile',
+                method: 'PUT',
+                body: profileData,
+                headers: {
+                    token: window.localStorage.getItem('token') || ''
+                }
+            })
+        }),
+
+        // Get Properties
         getData: builder.query({
             query: () => ({
                 url: '/property',
@@ -40,6 +56,7 @@ export const registerApi = createApi({
             })
         }),
 
+        // Add Property
         addProperty: builder.mutation({
             query: (propertyData) => ({
                 url: '/addproperty',
@@ -51,6 +68,7 @@ export const registerApi = createApi({
             })
         }),
 
+        // Delete Property
         deleteProperty: builder.mutation({
             query: (id) => ({
                 url: `/deleteproperty/${id}`,
@@ -61,6 +79,7 @@ export const registerApi = createApi({
             })
         }),
 
+        // Add Booking
         addBooking: builder.mutation({
             query: (bookingData) => ({
                 url: "/bookings",
@@ -72,6 +91,7 @@ export const registerApi = createApi({
             })
         }),
 
+        // Get Bookings by User
         getBookingsbyUser: builder.query({
             query: (userid) => ({
                 url: `/bookings/${userid}`,
@@ -82,6 +102,7 @@ export const registerApi = createApi({
             })
         }),
 
+        // Get Bookings by Seller
         getBookingsbySeller: builder.query({
             query: (sellerid) => ({
                 url: `/bookings/requests/${sellerid}`,
@@ -92,6 +113,7 @@ export const registerApi = createApi({
             })
         }),
 
+        // Delete Booking
         deleteBookings: builder.mutation({
             query: (id) => ({
                 url: `/bookings/${id}`,
@@ -102,6 +124,7 @@ export const registerApi = createApi({
             })
         }),
 
+        // Update Booking Status
         updateBookingStatus: builder.mutation({
             query: ({ id, status }) => ({
                 url: `/updatebooking/${id}`,
@@ -113,6 +136,7 @@ export const registerApi = createApi({
             })
         }),
 
+        // Confirm Booking
         confirmBooking: builder.mutation({
             query: (id) => ({
                 url: `/confirmbooking/${id}`,
@@ -123,6 +147,7 @@ export const registerApi = createApi({
             })
         }),
 
+        // Add Favorite
         addFavorite: builder.mutation({
             query: (data) => ({
                 url: "/favorites",
@@ -134,6 +159,7 @@ export const registerApi = createApi({
             }),
         }),
 
+        // Get Favorites
         getFavorites: builder.query({
             query: (params) => ({
                 url: `/favorites/${params}`,
@@ -149,20 +175,30 @@ export const registerApi = createApi({
 
 export const {
     useLoginUserMutation,
+
+    useGetDetailsQuery,
+
+    useUpdateProfileMutation,
+
     useGetDataQuery,
+    useLazyGetDataQuery,
+
     useAddPropertyMutation,
+    useDeletePropertyMutation,
+
     useAddBookingMutation,
     useGetBookingsbyUserQuery,
-    useAddFavoriteMutation,
-    useGetFavoritesQuery,
-    useLazyGetFavoritesQuery,
-    useDeleteBookingsMutation,
     useLazyGetBookingsbyUserQuery,
+
     useGetBookingsbySellerQuery,
     useLazyGetBookingsbySellerQuery,
-    useGetDetailsQuery,
+
+    useDeleteBookingsMutation,
     useUpdateBookingStatusMutation,
     useConfirmBookingMutation,
-    useDeletePropertyMutation,
-    useLazyGetDataQuery
+
+    useAddFavoriteMutation,
+    useGetFavoritesQuery,
+    useLazyGetFavoritesQuery
+
 } = registerApi
