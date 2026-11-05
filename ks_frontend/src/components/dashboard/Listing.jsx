@@ -33,8 +33,11 @@ function Listing() {
           const listedBy =
             property?.listedBy?._id || property?.listedBy
 
-          if (user && listedBy &&
-            String(listedBy) === String(user)) {
+          if (
+            user &&
+            listedBy &&
+            String(listedBy) === String(user)
+          ) {
 
             return (
               <div
@@ -47,7 +50,7 @@ function Listing() {
                     className="listing-image"
                     src={
                       property.images?.[0]
-                        ? `https://keyestate.onrender.com${property.images[0]}`
+                        ? property.images[0]
                         : '/default-property.jpg'
                     }
                     alt={property.title}
