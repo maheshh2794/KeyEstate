@@ -80,11 +80,11 @@ function Property() {
 
   // Filter Properties
   const filteredProperties = (properties || []).filter((property) => {
-    const city = property.city || property.location || ''
+    const city = property.address?.city || ''
 
     return (
       (!appliedFilters.city ||
-        city.toLowerCase() === appliedFilters.city.toLowerCase()) &&
+        city.trim().toLowerCase() === appliedFilters.city.trim().toLowerCase()) &&
 
       (!appliedFilters.price ||
         Number(property.price) <= Number(appliedFilters.price)) &&
