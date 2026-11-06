@@ -42,6 +42,15 @@ function Property() {
     isError
   } = useGetDataQuery()
 
+  // Debug Property Data
+  console.log("All Properties:", properties)
+
+  properties?.forEach((property) => {
+    console.log("Property:", property.title)
+    console.log("Address:", property.address)
+    console.log("City:", property.address?.city)
+  })
+
   // Get Favorites
   const { data: favorites } = useGetFavoritesQuery(user, {
     skip: !user
@@ -80,11 +89,23 @@ function Property() {
 
   // Filter Properties
   const filteredProperties = (properties || []).filter((property) => {
-    const city = property.address?.city || ''
+
+    // Read city from nested address or alternative fields
+    const propertyCity =
+      property.address?.city ||
+      property.city ||
+      property.location ||
+      ''
+
+    const selectedCity = appliedFilters.city.trim().toLowerCase()
+
+    const actualCity = String(propertyCity).trim().toLowerCase()
+
+    console.log("Selected City:", selectedCity)
+    console.log("Actual Property City:", actualCity)
 
     return (
-      (!appliedFilters.city ||
-        city.trim().toLowerCase() === appliedFilters.city.trim().toLowerCase()) &&
+      (!selectedCity || actualCity === selectedCity) &&
 
       (!appliedFilters.price ||
         Number(property.price) <= Number(appliedFilters.price)) &&
@@ -135,7 +156,7 @@ function Property() {
         </p>
       </div>
 
-      {/* Featured Filters */}
+      {/* Filters */}
       <div className="filter-section">
 
         <h3>Filter</h3>
