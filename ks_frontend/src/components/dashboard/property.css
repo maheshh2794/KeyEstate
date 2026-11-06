@@ -1,4 +1,8 @@
 
+/* =================================
+   COMMON PAGE STYLES
+================================= */
+
 .properties-page, .favorites-page, .listing-page, .requests-page, .bookings-page, .profile-page, .view-property-page, .add-property-page {
   width: 100%;
   max-width: 1500px;
@@ -23,12 +27,20 @@
   line-height: 1.6;
 }
 
+/* =================================
+   PROPERTY GRID
+================================= */
+
 .properties-grid, .favorites-grid, .listing-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 285px), 1fr));
   gap: 24px;
   align-items: stretch;
 }
+
+/* =================================
+   PROPERTY CARDS
+================================= */
 
 .property-card, .favorites-card, .listing-card {
   position: relative;
@@ -45,6 +57,8 @@
   transform: translateY(-4px);
   box-shadow: 0 16px 35px rgba(30, 48, 85, .11);
 }
+
+/* Property Image */
 
 .property-image-wrapper {
   width: 100%;
@@ -64,6 +78,8 @@
 .property-card:hover .property-image, .favorites-card:hover .property-image {
   transform: scale(1.035);
 }
+
+/* Favorite Button */
 
 .property-favorite-button {
   position: absolute;
@@ -93,6 +109,8 @@
   background: #fff0f3;
 }
 
+/* Card Content */
+
 .property-card-content, .favorites-card-content {
   padding: 20px;
 }
@@ -114,6 +132,8 @@
   font-size: 13px;
   line-height: 1.6;
 }
+
+/* Property Features */
 
 .property-features {
   display: grid;
@@ -144,6 +164,8 @@
   font-weight: 700;
 }
 
+/* Amenities */
+
 .property-amenities {
   padding: 14px 0 16px;
 }
@@ -165,6 +187,8 @@
   font-size: 11px;
   font-weight: 600;
 }
+
+/* Card Footer */
 
 .property-card-footer, .favorites-card-footer {
   display: flex;
@@ -203,6 +227,8 @@
   background: #2445b5;
 }
 
+/* Messages */
+
 .property-message, .favorites-message, .bookings-message {
   margin: 35px auto;
   color: #657189;
@@ -213,7 +239,6 @@
 .property-error, .favorites-error {
   color: #c43d55;
 }
-
 
 /* =================================
    HORIZONTAL FILTER SECTION
@@ -296,7 +321,6 @@
   background: #f1f5f9;
 }
 
-
 /* =================================
    PROPERTY CARD SIZE ADJUSTMENTS
 ================================= */
@@ -307,54 +331,116 @@
 }
 
 .property-card {
-  border-radius: 12px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
 }
 
 .property-image-wrapper {
-  height: 165px;
+  height: 195px;
+  position: relative;
 }
 
 .property-card-content {
-  padding: 12px;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 17px;
 }
 
 .property-title {
-  font-size: 15px;
-  margin-bottom: 6px;
+  font-size: 17px;
+  margin-bottom: 9px;
+  color: #17243b;
+  font-weight: 800;
+  line-height: 1.4;
+  letter-spacing: -.3px;
 }
 
 .property-description {
-  font-size: 12px;
-  min-height: 36px;
-  margin-bottom: 10px;
+  font-size: 12.5px;
+  min-height: 41px;
+  margin-bottom: 15px;
+  color: #7b879b;
+  line-height: 1.65;
 }
 
 .property-features {
-  padding: 10px 0;
+  padding: 13px 0;
+  gap: 12px;
+}
+
+.property-feature {
+  gap: 5px;
+}
+
+.property-feature-label {
+  font-size: 10px;
+  color: #929bad;
+  letter-spacing: .6px;
+}
+
+.property-feature-value {
+  font-size: 14px;
+  color: #293750;
+  font-weight: 800;
 }
 
 .property-amenities {
-  padding: 10px 0;
+  padding: 14px 0;
+}
+
+.property-amenity-list {
+  gap: 7px;
+  margin-top: 10px;
 }
 
 .property-amenity {
-  padding: 4px 6px;
+  padding: 6px 9px;
   font-size: 10px;
+  border-radius: 6px;
+  background: #f0f4ff;
+  color: #3558b8;
+  border: 1px solid #e4eaff;
 }
 
 .property-card-footer {
-  padding-top: 10px;
+  padding-top: 14px;
   gap: 10px;
+  margin-top: auto;
+}
+
+.property-price {
+  gap: 5px;
+}
+
+.property-price-label {
+  font-size: 10px;
+  color: #929bad;
+  letter-spacing: .6px;
 }
 
 .property-price-value {
-  font-size: 18px;
+  font-size: 19px;
+  color: #2448bd;
+  font-weight: 800;
+  white-space: nowrap;
 }
 
 .property-view-button {
-  min-height: 38px;
+  min-height: 39px;
+  padding: 0 15px;
+  border-radius: 8px;
+  font-size: 12px;
+  background: #3157d5;
+  transition: all .25s ease;
 }
 
+.property-view-button:hover {
+  background: #1e40af;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(49, 87, 213, .2);
+}
 
 /* =================================
    RESPONSIVE DESIGN
@@ -381,6 +467,14 @@
   .properties-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 14px;
+  }
+
+  .property-image-wrapper {
+    height: 175px;
+  }
+
+  .property-card-content {
+    padding: 14px;
   }
 }
 
@@ -410,5 +504,13 @@
 
   .properties-grid {
     grid-template-columns: 1fr;
+  }
+
+  .property-image-wrapper {
+    height: 210px;
+  }
+
+  .property-card-content {
+    padding: 16px;
   }
 }
