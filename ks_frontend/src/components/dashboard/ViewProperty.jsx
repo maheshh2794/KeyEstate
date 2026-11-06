@@ -287,8 +287,8 @@ function ViewProperty() {
 
                 ) : (
 
-                    <div className="view-property-section">
-                        <p>You are the owner of this property.</p>
+                    <div className="view-property-booking-controls">
+                        <h2>You are the owner of this property.</h2>
 
                         <button
                             type="button"
